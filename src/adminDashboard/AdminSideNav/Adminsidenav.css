@@ -1,0 +1,39 @@
+.listdetails {
+  overflow: hidden;
+  padding: 40px 0;
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  .listdetails {
+    overflow: hidden;
+    padding: 29px 0;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  i {
+    display: none;
+  }
+}
+@media (max-width: 768px) and (max-width: 1024px) {
+  .adminsidenav {
+    width: 20%;
+  }
+  .listdetails {
+    overflow: hidden;
+    padding: 29px 0;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1444px) {
+ 
+  .listdetails {
+    overflow: hidden;
+    padding: 29px 0;
+  }
+}
+@media (min-width: 2560px) {
+  .adminsidenav {
+    width: 15%;
+  }
+}

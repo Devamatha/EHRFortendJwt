@@ -1,0 +1,140 @@
+
+.max-w-1440 {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+body {
+  font-family: 'Roboto Serif';
+}
+
+.bg-img {
+  background-image: url('./assets/images/HomePage.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  background-attachment: fixed;
+}
+.login-bg {
+  background-image: url('./assets/images/login.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  background-attachment: fixed;
+  z-index: 1;
+}
+
+.login-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: inherit;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  filter: blur(3px); /* Adjust the blur intensity */
+  z-index: -1;
+}
+
+.bg{
+  background: linear-gradient(180deg, #c696e4 10%, #b15de6 26%, #810ccb 100%);
+
+}
+
+.getplan{
+  background: linear-gradient(90deg, #5A1C80 0%, #C883F2 50%, #A132E6 100%);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.10s ease;
+}
+
+.getplan:hover{
+  background: linear-gradient(90deg, #A132E6 0%, #C883F2 50%, #5A1C80 100%);
+
+}
+.gradient-button {
+  background: linear-gradient(90deg, #A132E6 0%, #C883F2 50%, #5A1C80 100%);
+  color: white;
+  font-weight: bold;
+  border-radius:0px 8px 8px 0px;
+ 
+}
+
+.accordion-content {
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+.accordion-content-open {
+  max-height: 500px; /* Adjust based on content size */
+}
+.accordion-content-closed {
+  max-height: 0;
+}
+
+/* Add this to your global CSS file or within a component */
+.hover-bg-gradient {
+  background: #060517
+}
+
+.hover-bg-gradient-hover:hover {
+  @apply hover:bg-transparent; /* Ensure default background is transparent for hover */
+  background: linear-gradient(90deg, #A132E6 0%, #C883F2 50%, #5A1C80 100%);
+  border: none;
+}
+
+
+.auth-card {
+background: rgba(138, 125, 147, 0.20);
+backdrop-filter: blur(15px);
+}
+
+.black-container{
+background: rgba(0, 0, 0, 0.50);
+backdrop-filter: blur(12.199999809265137px);
+}
+
+.purple-bg{
+background: rgba(161, 50, 230, 0.50);
+backdrop-filter: blur(20px);
+}
+.pricing-div{
+background: rgba(169, 37, 249, 0.20);
+backdrop-filter: blur(20px);
+
+}
+
+.about-bg{
+background: rgba(132, 18, 203, 0.50);
+backdrop-filter: blur(20px);
+}
+.about-bg:hover{
+  background: rgba(76, 17, 112, 0.5);
+  backdrop-filter: blur(20px);
+  transition: background 0.10s ease-in-out;
+
+  }
+.subscribe-box{
+background: rgba(169, 37, 249, 0.20);
+backdrop-filter: blur(20px);
+}
+
+.stepper:hover{
+  border-radius: 28px;
+border: 1px solid #A132E6;
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 4px 4px 0px rgba(0, 0, 0, 0.25), 0px 0px 80.64px 0px #9D00FF, 0px 0px 40.32px 0px #9D00FF, 0px 0px 11.52px 0px #9D00FF, 0px 0px 5.76px 0px #9D00FF;
+}
+
+.card-container:hover {
+  box-shadow: 0 8px 20px rgba(196, 69, 254, 0.5); 
+  transition: box-shadow 0.3s ease-in-out;
+  border: 1px solid white;
+}

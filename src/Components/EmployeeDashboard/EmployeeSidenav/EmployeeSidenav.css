@@ -1,0 +1,14 @@
+@media (min-width: 320px) and (max-width: 767px) {
+  .employeesidenav {
+    width: 25%;
+  }
+  #sidebar .content__item a span {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .employeesidenav {
+    width: 30%;
+  }
+}
