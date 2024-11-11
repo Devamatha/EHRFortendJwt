@@ -40,7 +40,17 @@ function EmployeeList() {
     setisLoading(true);
 
     axios
-    .get(`${apiUrl}users/employeedetails/${storedId}`)
+    .get(`${apiUrl}users/employeedetails/${storedId}`,
+      {
+        headers: {
+          "Authorization": sessionStorage.getItem('Authorization')
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
+      }
+
+    )
     .then((response) => {
       setJobDetails(response.data.reverse());
       setHasNoData(response.data.length === 0);

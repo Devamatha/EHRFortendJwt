@@ -25,7 +25,18 @@ const [loading,setLoading]=useState("");
   const holiDayTableDataById = async () => {
     // console.log(jobId);
     try {
-      const response = await axios.get(`${apiUrl}holidays/${jobId}`);
+      const response = await axios.get(`${apiUrl}holidays/${jobId}`,
+      {
+        headers: {
+          "Authorization": sessionStorage.getItem('Authorization')
+         
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
+       }
+
+      );
       const data = response.data;
 
       setholidayTitle(data.holidayTitle);
@@ -57,8 +68,14 @@ const [loading,setLoading]=useState("");
           method: "PUT",
           body: formData, 
           headers:{
-            user_Id: storedId
-          }
+            user_Id: storedId,
+            "Authorization": sessionStorage.getItem("Authorization"),
+            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
+          },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+
         }
       );
 

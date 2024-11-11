@@ -26,8 +26,13 @@ function AddJobDetails() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "user_Id": storedId
+          "user_Id": storedId,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
         },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
         body: JSON.stringify({
           jobTitle,
           //jobkeyskills: jobkeyskills,

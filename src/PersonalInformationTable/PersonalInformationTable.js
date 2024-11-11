@@ -20,7 +20,18 @@ useEffect(() => {
     setisLoading(true);
 
     axios
-      .get(`${apiUrl}users/personalInformation/${storedId}`)
+      .get(`${apiUrl}users/personalInformation/${storedId}`
+        ,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+          },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+        }
+
+      )
       .then((response) => {
         setJobDetails(response.data.reverse());
         setHasNoData(response.data.length === 0);

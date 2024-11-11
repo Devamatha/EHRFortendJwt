@@ -23,7 +23,18 @@ const PayHeadEdit = () => {
 
   const fetchPayHeadById = async () => {
     try {
-      const response = await axios.get(`${apiUrl}payHeads/${payId}`);
+      const response = await axios.get(`${apiUrl}payHeads/${payId}`,{
+        headers: {
+          Authorization: sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true
+      }
+
+      );
       const data = response.data;
 
       setpayHeadName(data.payHeadName);

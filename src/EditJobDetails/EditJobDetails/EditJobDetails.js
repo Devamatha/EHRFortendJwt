@@ -26,7 +26,15 @@ const EditJobDetails = () => {
   // Fetch job details if not available in location state
   useEffect(() => {
     if (!initialJobDetails) {
-      axios.get(`${apiUrl}JobDetails/${jobId}`)
+      axios.get(`${apiUrl}JobDetails/${jobId}` ,{
+        headers: {
+          "Authorization": sessionStorage.getItem('Authorization')
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
+      }
+      )
         .then(response => {
           setJobData({
             jobTitle: response.data.jobTitle || "",
@@ -62,8 +70,13 @@ const EditJobDetails = () => {
     axios
       .put(`${apiUrl}JobDetails/update/${jobId}`, updatedJobDetails,{
         headers:{
-          user_Id: localStorage.getItem("user_id")
-        }
+          user_Id: localStorage.getItem("user_id"),
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
       })
       .then(response => {
         Swal.fire({

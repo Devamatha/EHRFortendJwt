@@ -25,7 +25,12 @@ function AddPayHead() {
           headers: {
             "Content-Type": "application/json",
             "user_Id": storedId,
+            "Authorization": sessionStorage.getItem('Authorization'),
+            "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
           },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true
         }
       );
   

@@ -21,7 +21,18 @@ function LeaveApprovalData() {
 
   const leaveApprovalData = async (storedId) => {
     const response = await axios
-      .get(`${apiUrl}users/leave-approvals/${storedId}`)
+      .get(`${apiUrl}users/leave-approvals/${storedId}`,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+          
+          },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+        }
+
+      )
       .then((response) => {
         const allLeaveApprovals = response.data.reverse();
         setLeaveDetails(allLeaveApprovals);
@@ -44,7 +55,12 @@ function LeaveApprovalData() {
       .put(`${apiUrl}leaveApproval/status/${id}`, formData, {
         headers: {
           user_Id: storedId,
+          Authorization: sessionStorage.getItem("Authorization"),
+          x_xsrf_token: sessionStorage.getItem("XSRF-TOKEN"),
         },
+        observe: "response",
+        credentials: "include",
+        withCredentials: true,
       })
       .then((response) => {
         //alert(`Status updated to ${newStatus}`);

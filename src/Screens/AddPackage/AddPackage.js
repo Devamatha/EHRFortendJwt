@@ -35,18 +35,22 @@ const AddPackage = () => {
     };
     const xsrfToken = sessionStorage.getItem('XSRF-TOKEN');
   const authorizationToken = sessionStorage.getItem('Authorization');
-    const headers = {
-      "Authorization": authorizationToken,
-      "X-XSRF-TOKEN":Cookies.get('XSRF-TOKEN')
-    }
+    // const headers = {
+    //   "Authorization": authorizationToken,
+    //   "X-XSRF-TOKEN":"8d499f95-8887-4121-98b2-4211999afd1b"
+    // }
     try {
       const response = await axios.post(
         `${apiUrl}plan/save/${adminId}`,
         newPlan,
         
-          { headers,
+          { headers:{
+            "Authorization": authorizationToken,
+         "x-xsrf-token":"5da50ef2-9755-4f79-b209-a90fb9e4de2d"
+          },
         observe: 'response',
-        credentials: 'include'
+        credentials: 'include',
+          withCredentials: true,
            },
          
          

@@ -36,26 +36,28 @@ const ResumeUpload = () => {
           body: formData,
           headers: {
             user_Id: storedId,
+            "Authorization": sessionStorage.getItem("Authorization"),
+            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
           },
+          observe: "response",
+          credentials: "include",
+          withCredentials: true,
         }
       );
 
       if (backendResponse.ok) {
         const errorData = await backendResponse.json();
-         console.log(errorData.jobRole);
-      
+        console.log(errorData.jobRole);
+
         if (
-          errorData.jobRole!= null &&
+          errorData.jobRole != null &&
           errorData.resumeTextData != null &&
           errorData != null
         ) {
           try {
             const webhookFormData = new FormData();
             webhookFormData.append("jobRole", errorData.jobRole);
-            webhookFormData.append(
-              "resumeTextData",
-              errorData.resumeTextData
-            );
+            webhookFormData.append("resumeTextData", errorData.resumeTextData);
             // webhookFormData.append('startTime',fromTime);
             // webhookFormData.append('endime',toTime);
             // webhookFormData.append('timestamp', new Date().toISOString());
@@ -146,7 +148,12 @@ const ResumeUpload = () => {
           body: formData,
           headers: {
             user_Id: storedId,
+            "Authorization": sessionStorage.getItem("Authorization"),
+            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
           },
+          observe: "response",
+          credentials: "include",
+          withCredentials: true,
         }
       );
       if (backendResponse.ok) {

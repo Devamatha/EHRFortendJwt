@@ -42,7 +42,14 @@ const EditEmployee = () => {
 
   useEffect(() => {
     axios
-      .get(`${apiUrl}employees/${id}`)
+      .get(`${apiUrl}employees/${id}`,{
+        headers: { 
+          "Authorization": sessionStorage.getItem('Authorization')
+        } ,
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,  
+      })
       .then((response) => setEmployee(response.data))
       .catch((error) => console.error("Error fetching employee data:", error));
   }, [id]);
@@ -70,8 +77,13 @@ const EditEmployee = () => {
       .put(`${apiUrl}employees/update/${id}`, formData, {
         headers:{
           "Content-Type": "multipart/form-data",
-          "user_Id": localStorage.getItem("user_id")
-        }
+          "user_Id": localStorage.getItem("user_id"),
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
       }
     )
       .then((response) => {

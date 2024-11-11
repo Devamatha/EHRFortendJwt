@@ -80,7 +80,13 @@ function AddEmployee() {
           headers: {
             "Content-Type": "multipart/form-data",
             user_Id: storedId,
+            "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
           },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+
         }
       );
 

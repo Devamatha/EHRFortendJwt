@@ -25,7 +25,18 @@ function PayHeadList() {
     setisLoading(true);
 
     axios
-    .get(`${apiUrl}users/payHeads/${storedId}`)
+    .get(`${apiUrl}users/payHeads/${storedId}`,
+      {
+        headers: {
+          "Authorization": sessionStorage.getItem('Authorization'),
+         
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
+      }
+      
+    )
     .then((response) => {
       setJobDetails(response.data.reverse());
       setHasNoData(response.data.length === 0);

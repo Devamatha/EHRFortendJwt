@@ -14,7 +14,17 @@ function AttedenceEmployee() {
     setisLoading(true);
 
     axios
-      .get(`${apiUrl}users/attendance/${storedId}`)
+      .get(`${apiUrl}users/attendance/${storedId}`,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+           
+          },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+        }
+      )
       .then((response) => {
        
         setAttendanceDetails(response.data.reverse());

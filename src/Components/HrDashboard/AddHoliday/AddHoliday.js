@@ -18,8 +18,13 @@ function AddHoliday() {
         method: "POST",
         headers: {
           "Content-Type": "application/json", 
-          "user_Id": userid
+          "user_Id": userid,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
         },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
         body: JSON.stringify({
           holidayTitle: holidayTitle,
           description: description,

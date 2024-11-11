@@ -25,7 +25,18 @@ function HolidayTableData() {
   const holiday = async (storedId) => {
     setisLoading(true);
     try {
-      const response = await axios.get(`${apiUrl}users/holiday/${storedId}`);
+      const response = await axios.get(`${apiUrl}users/holiday/${storedId}`,
+      {
+        headers: {
+          "Authorization": sessionStorage.getItem('Authorization'),
+
+        },
+        observe: 'response',
+        credentials: 'include',
+        withCredentials: true,
+       }
+
+      );
       setJobDetails(response.data.reverse());
 
       setHasNoData(response.data.length === 0);
@@ -65,8 +76,13 @@ function HolidayTableData() {
         axios
           .delete(`${apiUrl}holidays/delete/${jobId}`,{
             headers:{
-              user_Id: storedId
-            }
+              user_Id: storedId,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+            },
+            observe: 'response',
+            credentials: 'include',
+            withCredentials: true,
           })
           .then(() => {
             setJobDetails(jobDetails.filter((job) => job.id !== jobId));

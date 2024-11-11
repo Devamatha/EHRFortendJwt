@@ -26,7 +26,16 @@ function TableData() {
     SetIsLoading(true);
     try {
       const response = await axios.get(
-        `${apiUrl}users/add-job-details/${storedId}`
+        `${apiUrl}users/add-job-details/${storedId}`,
+     {
+      headers: {
+        "Authorization": sessionStorage.getItem('Authorization'),
+      
+      },
+      observe: 'response',
+      credentials: 'include',
+      withCredentials: true,
+     }
       );
       setJobDetails(response.data.reverse());
       setHasNoData(response.data.length === 0);
@@ -65,8 +74,13 @@ function TableData() {
           .delete(`${apiUrl}JobDetails/delete/${jobId}`, {
             headers: {
               "Content-Type": "application/json",
-              "user_Id": storedId, // Ensure user_Id is valid and not undefined
+              "user_Id": storedId,
+              "Authorization": sessionStorage.getItem('Authorization'),
+              "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
             },
+            observe: 'response',
+            credentials: 'include',
+            withCredentials: true,
           })
           .then((response) => {
             setJobDetails((prevJobs) => prevJobs.filter((job) => job.id !== jobId));

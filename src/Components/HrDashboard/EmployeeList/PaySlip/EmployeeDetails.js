@@ -21,7 +21,17 @@ const EmployeeDetails = () => {
   const environment = process.env.REACT_APP_NODE_ENV;
   const employeeGet = () => {
     axios 
-      .get(`${apiUrl}employees/${empid}`)
+      .get(`${apiUrl}employees/${empid}`,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+          },
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+        }
+
+      )
       .then((reponse) => {
         setEmployeeData(reponse.data);
         // console.log(reponse.data);
@@ -38,7 +48,17 @@ const EmployeeDetails = () => {
   const getHrDetails = (id) => {
     // const user_id = localStorage.getItem("user_id");
     axios
-      .get(`${apiUrl}employees/addPayHeaddetails/${id}`)
+      .get(`${apiUrl}employees/addPayHeaddetails/${id}`,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization'),
+            "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')``
+          },  
+          observe: 'response',
+          credentials: 'include',
+          withCredentials: true,
+        }
+      )
       .then((response) => {
         setUserdata(response.data);
         // console.log(response.data);
