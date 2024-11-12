@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
+import{getXsrfToken} from "../../../App.js";
 
 // import "./LeaveApproval.css"
 const LeaveApproval = () => {
@@ -15,8 +16,9 @@ const LeaveApproval = () => {
   const [endDate, setEndDate] = useState("");
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
-  const [status, setStatus] = useState("Pending"); // Default status
+  const [status, setStatus] = useState("Pending"); 
   const [loading, setLoading] = useState(false);
+  const xsrfToken = getXsrfToken();
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -41,7 +43,10 @@ const LeaveApproval = () => {
         {
           headers: {
             Id: empId,
+            Authorization: sessionStorage.getItem("Authorization"),
+            "x-xsrf-token": xsrfToken,
           },
+          withCredentials: true,
         }
       );
       // console.log('Leave approval created:', response.data);
@@ -72,8 +77,8 @@ const LeaveApproval = () => {
       setMessage("");
       setType("");
       Swal.fire({
-        title: error.response.data.error,
-        text: error.response.data.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
         icon: "error",
       });
       setLoading(false);

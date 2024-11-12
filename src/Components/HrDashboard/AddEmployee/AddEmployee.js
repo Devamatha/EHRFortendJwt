@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../../App.js";
+
 function AddEmployee() {
   const storedId = localStorage.getItem("user_id");
-  const [file, setFile] = useState(null);
+  //const [file, setFile] = useState(null);
   const [fullName, setfullName] = useState("");
   const [dob, setDate] = useState("");
   const [gender, setgender] = useState("");
@@ -13,13 +15,13 @@ function AddEmployee() {
   const [address, setaddress] = useState("");
   const [city, setcity] = useState("");
   const [country, setcountry] = useState("");
-  const [emailId, setemailId] = useState("");
+  const [email, setemailId] = useState("");
   const [identification, setidentification] = useState("");
   const [idNumber, setidNumber] = useState("");
   const [employeeType, setemployeeType] = useState("");
   const [joiningDate, setjoiningDate] = useState("");
   const [bloodGroup, setbloodGroup] = useState("");
-  const [contactNo, setcontactNo] = useState("");
+  const [mobileNumber, setcontactNo] = useState("");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [state, setstate] = useState("");
@@ -29,70 +31,64 @@ function AddEmployee() {
 
   // };
 
+  const xsrfToken = getXsrfToken();
 
   const [error, setError] = useState("");
-  // Handle file change
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 1 * 1024 * 1024) { 
-        setError("File with maximum size of 1MB is allowed");
-        return;
-      }
-      setError("");
-      setFile(file.name);
-      
-    } else {
-      setFile("");
-     
-    }
-  };
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     if (file.size > 1 * 1024 * 1024) {
+  //       setError("File with maximum size of 1MB is allowed");
+  //       return;
+  //     }
+  //     setError("");
+  //     setFile(file.name);
+  //   } else {
+  //     setFile("");
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const formData = new FormData();
-    formData.append("photograph", file);
-    formData.append("dob", dob);
-    formData.append("gender", gender);
-    formData.append("maritalStatus", maritalStatus);
-    formData.append("nationality", nationality);
-    formData.append("address", address);
-    formData.append("city", city);
-    formData.append("state", state);
-    formData.append("country", country);
-    formData.append("emailId", emailId);
-    formData.append("contactNo", contactNo);
-    formData.append("identification", identification);
-    formData.append("idNumber", idNumber);
-    formData.append("employeeType", employeeType);
-    formData.append("joiningDate", joiningDate);
-    formData.append("bloodGroup", bloodGroup);
-    formData.append("fullName", fullName);
 
+    const data = {
+      dob,
+      gender,
+      maritalStatus,
+      nationality,
+      address,
+      city,
+      state,
+      country,
+      email,
+      mobileNumber,
+      identification,
+      idNumber,
+      employeeType,
+      joiningDate,
+      bloodGroup,
+      fullName,
+    };
     try {
       // Step 1  Upload Resume
       const backendResponse = await axios.post(
-        `${apiUrl}employees/user/${storedId}`,
-        formData,
+        `${apiUrl}clients/save/Employee/${storedId}`,
 
+        JSON.stringify(data),
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
             user_Id: storedId,
-            "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+            Authorization: sessionStorage.getItem("Authorization"),
+            "x-xsrf-token": xsrfToken,
           },
-          observe: 'response',
-          credentials: 'include',
-          withCredentials: true,
 
+          withCredentials: true,
         }
       );
 
-      // console.log(backendResponse.data);
-      // console.log(backendResponse.data.jobRole);
-      // console.log(backendResponse.data.resumeTextData);
+      
       Swal.fire({
         icon: "success",
         title: "Employee Details added successfully",
@@ -100,13 +96,14 @@ function AddEmployee() {
       });
       setLoading(false);
     } catch (error) {
+      console.error("Error details ", error);
+
       Swal.fire({
         icon: "error",
-        title: error.response.data.error,
-        text: error.response.data.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
       });
       // setWebhookMessage('');
-      console.error("Error details ", error);
       setLoading(false);
     }
   };
@@ -311,7 +308,7 @@ function AddEmployee() {
               id="inputemailId"
               placeholder="emailId"
               required
-              value={emailId}
+              value={email}
               onChange={(e) => setemailId(e.target.value)}
             />
           </div>
@@ -328,7 +325,7 @@ function AddEmployee() {
               id="inputcontactNo"
               placeholder="contactNo"
               required
-              value={contactNo}
+              value={mobileNumber}
               onChange={(e) => setcontactNo(e.target.value)}
             />
           </div>
@@ -444,7 +441,7 @@ function AddEmployee() {
               <option value="Intern">Intern</option>
             </select>
           </div>
-          <div className="col-12 col-md-6 col-lg-4  mt-1">
+          {/* <div className="col-12 col-md-6 col-lg-4  mt-1">
             <label
               htmlFor="file"
               className="col-sm-4 col-form-label text-light"
@@ -460,8 +457,8 @@ function AddEmployee() {
               required
             />
 
-{error && <p className="text-red-500 mt-1">{error}</p>}
-          </div>
+            {error && <p className="text-red-500 mt-1">{error}</p>}
+          </div> */}
         </div>
 
         <button

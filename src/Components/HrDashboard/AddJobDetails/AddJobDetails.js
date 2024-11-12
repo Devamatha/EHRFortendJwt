@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate} from "react-router-dom";
+import { getXsrfToken } from "../../../App.js";
 
 function AddJobDetails() {
   const [jobTitle, setjobTitle] = useState("");
@@ -13,6 +14,7 @@ function AddJobDetails() {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const navigate = useNavigate();
+  const xsrfToken = getXsrfToken();
 
   const [loading, setLoading] = useState(false);
   const handleAddJob = async (e) => {
@@ -28,11 +30,12 @@ function AddJobDetails() {
           "Content-Type": "application/json",
           "user_Id": storedId,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+          "x-xsrf-token":xsrfToken
         },
         observe: 'response',
         credentials: 'include',
         withCredentials: true,
+
         body: JSON.stringify({
           jobTitle,
           //jobkeyskills: jobkeyskills,

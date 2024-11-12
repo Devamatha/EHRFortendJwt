@@ -1,39 +1,43 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getXsrfToken } from "../../../App.js";
+
 const LeaveApprovalList = () => {
   const [leaveApprovals, setLeaveApprovals] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const apiUrl=process.env.REACT_APP_DB;
+  const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const empId=localStorage.getItem("empId");
+  const empId = localStorage.getItem("empId");
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const xsrfToken = getXsrfToken();
+
   useEffect(() => {
     fetchLeaveApprovals();
   }, [empId]);
-  
+
   const fetchLeaveApprovals = async () => {
     setisLoading(true);
 
     try {
-      const response = await axios.get(
-       ` ${apiUrl}employees/leave/${empId}`
-      ); // Adjust the endpoint URL as needed
+      const response = await axios.get(` ${apiUrl}employees/leave/${empId}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("Authorization"),
+          "X-XSRF-TOKEN": xsrfToken,
+        },
+        withCredentials: true,
+      }); // Adjust the endpoint URL as needed
       setLeaveApprovals(response.data.reverse());
       setHasNoData(response.data.length === 0);
       setisLoading(false);
     } catch (error) {
       setError("Error fetching leave approvals");
-      console.error(
-        "There was an error fetching the leave approvals:",
-        error
-      );
+      console.error("There was an error fetching the leave approvals:", error);
       setisLoading(false);
-
     }
     //  finally {
     //   setLoading(false);
@@ -79,17 +83,16 @@ const LeaveApprovalList = () => {
   };
   return (
     <div className="w-[100%] ">
-         {isLoading ? (
+      {isLoading ? (
         // Spinner while loading
         <div className="d-flex justify-content-center align-items-center">
           <div className="spinner-border" role="status">
             <span className="sr-only">Loading...</span>
           </div>
         </div>
-      ) :hasNoData?(
+      ) : hasNoData ? (
         <div className="alert alert-warning text-center">No data found!</div>
- 
-      ):(
+      ) : (
         <div className="table-containerDetails table-container table-responsive text-center rounded shadow-sm bg-black-50">
           <h2 className="table-title text-light"> Leaves Data</h2>
           <table className="table-active table-striped table-hover">

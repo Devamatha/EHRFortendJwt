@@ -14,10 +14,18 @@ const AttendenceList = () => {
     setisLoading(true);
 
     axios
-      .get(`${apiUrl}employees/attedence/${empId}`)
+      .get(`${apiUrl}employees/attedence/${empId}`,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+          },
+          withCredentials: true,
+        }
+
+      )
       .then((response) => {
-        setAttendances(response.data.reverse());
-        setHasNoData(response.data.length === 0);
+        setAttendances(response.data?.reverse());
+        setHasNoData(response.data?.length === 0);
         setisLoading(false);
       })
       .catch((error) => {

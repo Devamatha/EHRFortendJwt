@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import { getXsrfToken } from "../../../../App.js";
 
 // import '../AddPayHead.css';
 const PayHeadEdit = () => {
@@ -16,6 +17,7 @@ const PayHeadEdit = () => {
   const environment = process.env.REACT_APP_NODE_ENV;
   const [loading, setLoading] = useState(false);
   const { payId } = useParams();
+  const xsrfToken = getXsrfToken();
 
   useEffect(() => {
     fetchPayHeadById();
@@ -26,11 +28,9 @@ const PayHeadEdit = () => {
       const response = await axios.get(`${apiUrl}payHeads/${payId}`,{
         headers: {
           Authorization: sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+          "x-xsrf-token":xsrfToken
 
         },
-        observe: 'response',
-        credentials: 'include',
         withCredentials: true
       }
 
@@ -58,8 +58,11 @@ const PayHeadEdit = () => {
         method: "PUT",
         body: formData,
         headers: {
-          "user_Id": storedId
-        }
+          "user_Id": storedId,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "X-Xsrf-Token":xsrfToken
+        },
+        withCredentials: true
       });
 
       if (!response.ok) {
@@ -70,6 +73,8 @@ const PayHeadEdit = () => {
           title: errorData.message,
           text: errorData.error ,
         });
+        setLoading(false);
+
       } else {
         const data = await response.json();
         // Handle successful login, e.g., store JWT token, redirect to another page, etc.

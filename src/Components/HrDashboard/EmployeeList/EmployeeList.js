@@ -10,7 +10,7 @@ import {
   faDollar,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-
+import { getXsrfToken } from "../../../App.js";
 import { useNavigate } from "react-router-dom";
 import PayheadsModal from "./PayHeadsModal/PayheadsModal";
 import PaySlip from "./PaySlip/PaySlip";
@@ -33,6 +33,8 @@ function EmployeeList() {
   const [itemsPerPage] = useState(5);
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+  const xsrfToken = getXsrfToken();
+
   useEffect(() => {
     employeeList(storedId);
   }, []);
@@ -45,9 +47,7 @@ function EmployeeList() {
         headers: {
           "Authorization": sessionStorage.getItem('Authorization')
         },
-        observe: 'response',
-        credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
       }
 
     )
@@ -92,8 +92,13 @@ function EmployeeList() {
         axios
           .delete(`${apiUrl}employees/delete/${jobId}`,{
             headers:{
-              user_Id: storedId
-            }
+              user_Id: storedId,
+              "Authorization": sessionStorage.getItem('Authorization'),
+              "X-XSRF-TOKEN":xsrfToken
+            },
+            observe: 'response',
+            credentials: 'include',
+            withCredentials: true,
           })
           .then(() => {
             setJobDetails(jobDetails.filter((job) => job.id !== jobId));

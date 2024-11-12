@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { getXsrfToken } from "../../App.js";
 
 const EditJobDetails = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const EditJobDetails = () => {
         },
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
       }
       )
         .then(response => {
@@ -55,6 +56,7 @@ const EditJobDetails = () => {
     const { name, value } = e.target;
     setJobData({ ...jobData, [name]: value });
   };
+  const xsrfToken = getXsrfToken();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,11 +74,11 @@ const EditJobDetails = () => {
         headers:{
           user_Id: localStorage.getItem("user_id"),
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+          "x-xsrf-token":xsrfToken
         },
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
       })
       .then(response => {
         Swal.fire({

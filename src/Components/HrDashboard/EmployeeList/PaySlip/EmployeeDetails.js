@@ -28,7 +28,7 @@ const EmployeeDetails = () => {
           },
           observe: 'response',
           credentials: 'include',
-          withCredentials: true,
+             withCredentials: true,
         }
 
       )
@@ -52,11 +52,11 @@ const EmployeeDetails = () => {
         {
           headers: {
             "Authorization": sessionStorage.getItem('Authorization'),
-            "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')``
+            "x-xsrf-token":xsrfToken``
           },  
           observe: 'response',
           credentials: 'include',
-          withCredentials: true,
+             withCredentials: true,
         }
       )
       .then((response) => {

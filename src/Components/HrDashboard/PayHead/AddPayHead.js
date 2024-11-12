@@ -2,6 +2,8 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../../App.js";
+
 function AddPayHead() {
   const [payHeadName, setpayHeadName] = useState("");
   const [payHeadDescription, setpayHeadDescription] = useState("");
@@ -10,6 +12,8 @@ function AddPayHead() {
   const [loading, setLoading] = useState("");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+  const xsrfToken = getXsrfToken();
+
   const handleaddJob = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -26,11 +30,10 @@ function AddPayHead() {
             "Content-Type": "application/json",
             "user_Id": storedId,
             "Authorization": sessionStorage.getItem('Authorization'),
-            "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+            "x-xsrf-token":xsrfToken
           },
-          observe: 'response',
-          credentials: 'include',
-          withCredentials: true
+       
+          withCredentials: true,
         }
       );
   

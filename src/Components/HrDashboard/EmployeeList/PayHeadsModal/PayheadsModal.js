@@ -3,6 +3,8 @@ import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 import "./PayheadsModal.css";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../../../App.js";
+
 const PayheadsModal = ({ show, closeModal, empId }) => {
   const [availablePayheads, setAvailablePayheads] = useState([]);
   const [selectedPayheads, setSelectedPayheads] = useState([]);
@@ -13,6 +15,7 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
     setSelectedPayheads([...selectedPayheads, payhead]);
     setAvailablePayheads(availablePayheads.filter((p) => p.payHeadId !== payhead.payHeadId));
   };
+  const xsrfToken = getXsrfToken();
 
   const removePayhead = (payhead) => {
     setAvailablePayheads([...availablePayheads, payhead]);
@@ -36,24 +39,26 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
     axios
       .post(`${apiUrl}addPayHeadsToEmployee/employeeData/${empId}`, payload,{
         headers: {
-          "user_Id": localStorage.getItem("user_id")
-        }
+          "user_Id": localStorage.getItem("user_id"),
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":xsrfToken
+        },
+        withCredentials: true
       })
       .then((response) => {
-        // console.log("Payheads added successfully:", response.data);
         Swal.fire({
           title: "Payheads added successfully",
           text: "Payheads added successfully",
           icon: "success",
           confirmButtonText: "OK",
         })
-        closeModal(); // Close modal after successful submission
+        closeModal(); 
       })
       .catch((error) => {
         console.error("There was an error adding the pay heads!", error);
         Swal.fire({
-          title: error.response.data.error,
-          text: error.response.data.message,
+          title: error.response?.data?.error,
+          text: error.response?.data?.message,
           icon: "error",
           confirmButtonText: "OK",
         })
@@ -63,9 +68,16 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
   useEffect(() => {
     const storedId = localStorage.getItem("user_id");
     axios
-      .get(`${apiUrl}users/payHeads/${storedId}`)
+      .get(`${apiUrl}users/payHeads/${storedId}`
+        ,{
+          headers: {
+            "Authorization": sessionStorage.getItem('Authorization')
+          },
+          withCredentials: true
+        }
+      )
       .then((response) => {
-        setAvailablePayheads(response.data.reverse());
+        setAvailablePayheads(response.data?.reverse());
       })
       .catch((error) => {
         console.error("There was an error fetching the job details!", error);

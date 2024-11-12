@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../../../App.js";
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -10,6 +11,8 @@ const EditEmployee = () => {
   const environment = process.env.REACT_APP_NODE_ENV;
   const [loading, setLoading] = useState(false);
   const user_Id=localStorage.getItem("user_Id");
+  const xsrfToken = getXsrfToken();
+
   const [employee, setEmployee] = useState({
     fullName: "",
     empCode: "",
@@ -48,7 +51,7 @@ const EditEmployee = () => {
         } ,
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,  
+           withCredentials: true,  
       })
       .then((response) => setEmployee(response.data))
       .catch((error) => console.error("Error fetching employee data:", error));
@@ -78,12 +81,12 @@ const EditEmployee = () => {
         headers:{
           "Content-Type": "multipart/form-data",
           "user_Id": localStorage.getItem("user_id"),
-          "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+         "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token":xsrfToken
         },
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
       }
     )
       .then((response) => {

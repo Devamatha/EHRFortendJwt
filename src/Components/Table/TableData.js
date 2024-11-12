@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { getXsrfToken } from "../../App.js";
 
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,8 @@ function TableData() {
   const environment = process.env.REACT_APP_NODE_ENV;
   const [Isloading, SetIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
+  const xsrfToken = getXsrfToken();
+
   useEffect(() => {
     getAllJobDetails(storedId);
   }, [storedId]);
@@ -34,7 +37,8 @@ function TableData() {
       },
       observe: 'response',
       credentials: 'include',
-      withCredentials: true,
+         withCredentials: true,
+       
      }
       );
       setJobDetails(response.data.reverse());
@@ -76,11 +80,10 @@ function TableData() {
               "Content-Type": "application/json",
               "user_Id": storedId,
               "Authorization": sessionStorage.getItem('Authorization'),
-              "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+              "X-XSRF-TOKEN":xsrfToken
             },
-            observe: 'response',
-            credentials: 'include',
-            withCredentials: true,
+    
+               withCredentials: true,
           })
           .then((response) => {
             setJobDetails((prevJobs) => prevJobs.filter((job) => job.id !== jobId));

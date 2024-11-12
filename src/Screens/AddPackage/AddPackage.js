@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 // import './AddPackage.css';
-import Cookies from 'js-cookie';
+import { getXsrfToken } from "../../App.js";
+
 const AddPackage = () => {
   const [planType, setPlanType] = useState("Monthly"); // Default value
   const [amount, setAmount] = useState(0);
@@ -14,7 +15,8 @@ const AddPackage = () => {
   const adminId = localStorage.getItem("admin_Id");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  
+  const xsrfToken = getXsrfToken();
+
   const [total, setTotal] = useState(0);
   useEffect(() => {
     const calculatedTotal = amount / totalResumes;
@@ -33,24 +35,19 @@ const AddPackage = () => {
       totalResumes,
       additionalFeatures,
     };
-    const xsrfToken = sessionStorage.getItem('XSRF-TOKEN');
-  const authorizationToken = sessionStorage.getItem('Authorization');
-    // const headers = {
-    //   "Authorization": authorizationToken,
-    //   "X-XSRF-TOKEN":"8d499f95-8887-4121-98b2-4211999afd1b"
-    // }
+  
     try {
       const response = await axios.post(
         `${apiUrl}plan/save/${adminId}`,
         newPlan,
         
           { headers:{
-            "Authorization": authorizationToken,
-         "x-xsrf-token":"5da50ef2-9755-4f79-b209-a90fb9e4de2d"
+            "Authorization": sessionStorage.getItem("Authorization"),
+         "x-xsrf-token":xsrfToken
           },
         observe: 'response',
         credentials: 'include',
-          withCredentials: true,
+             withCredentials: true,
            },
          
          

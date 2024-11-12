@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../../App.js";
 function AddHoliday() {
   const [holidayTitle, setholidayTitle] = useState("");
   const [description, setdescription] = useState("");
@@ -10,6 +11,10 @@ function AddHoliday() {
   const [loading, setLoading] = useState(false);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+
+
+
+const xsrfToken = getXsrfToken();
   const handleaddJob = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -20,11 +25,11 @@ function AddHoliday() {
           "Content-Type": "application/json", 
           "user_Id": userid,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":sessionStorage.getItem('XSRF-TOKEN')
+          "x-xsrf-token":xsrfToken
         },
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
         body: JSON.stringify({
           holidayTitle: holidayTitle,
           description: description,

@@ -29,7 +29,7 @@ function LeaveApprovalData() {
           },
           observe: 'response',
           credentials: 'include',
-          withCredentials: true,
+             withCredentials: true,
         }
 
       )
@@ -60,7 +60,7 @@ function LeaveApprovalData() {
         },
         observe: "response",
         credentials: "include",
-        withCredentials: true,
+           withCredentials: true,
       })
       .then((response) => {
         //alert(`Status updated to ${newStatus}`);

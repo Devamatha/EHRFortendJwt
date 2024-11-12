@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom'
+import { getXsrfToken } from "../../../App.js";
 
 const HoliDayTableDataEdit = () => {
 
@@ -13,6 +14,10 @@ const HoliDayTableDataEdit = () => {
   const storedId = localStorage.getItem("user_id");
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+
+
+  const xsrfToken = getXsrfToken();
+
   const navigate = useNavigate();
 const [loading,setLoading]=useState("");
   //Get Id
@@ -33,7 +38,7 @@ const [loading,setLoading]=useState("");
         },
         observe: 'response',
         credentials: 'include',
-        withCredentials: true,
+           withCredentials: true,
        }
 
       );
@@ -70,11 +75,11 @@ const [loading,setLoading]=useState("");
           headers:{
             user_Id: storedId,
             "Authorization": sessionStorage.getItem("Authorization"),
-            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
+            "x-xsrf-token": xsrfToken,
           },
           observe: 'response',
           credentials: 'include',
-          withCredentials: true,
+             withCredentials: true,
 
         }
       );

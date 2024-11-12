@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
+import { getXsrfToken } from "../../App.js";
 
 const ResumeUpload = () => {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+  const xsrfToken = getXsrfToken();
 
   const storedId = localStorage.getItem("user_id");
   const [formVisible, setFormVisible] = useState(false);
@@ -37,11 +39,11 @@ const ResumeUpload = () => {
           headers: {
             user_Id: storedId,
             "Authorization": sessionStorage.getItem("Authorization"),
-            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
+            "x-xsrf-token": xsrfToken,
           },
           observe: "response",
           credentials: "include",
-          withCredentials: true,
+             withCredentials: true,
         }
       );
 
@@ -149,11 +151,11 @@ const ResumeUpload = () => {
           headers: {
             user_Id: storedId,
             "Authorization": sessionStorage.getItem("Authorization"),
-            "x-xsrf-token": sessionStorage.getItem("XSRF-TOKEN"),
+            "x-xsrf-token": xsrfToken,
           },
           observe: "response",
           credentials: "include",
-          withCredentials: true,
+             withCredentials: true,
         }
       );
       if (backendResponse.ok) {

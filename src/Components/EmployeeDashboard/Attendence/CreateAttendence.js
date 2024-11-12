@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import{getXsrfToken} from "../../../App.js";
 const AttendanceForm = () => {
   const empId = localStorage.getItem("empId");
 
@@ -15,7 +16,7 @@ const AttendanceForm = () => {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [loading, setLoading] = useState(false);
-
+const xsrfToken = getXsrfToken();
   useEffect(() => {
     const currentDate = new Date().toISOString().split("T")[0];
     setDate(currentDate);
@@ -23,7 +24,13 @@ const AttendanceForm = () => {
     const fetchAttendance = async () => {
       try {
         const response = await axios.get(
-          `${apiUrl}attendance/employee/attendance/${empId}/${currentDate}`
+          `${apiUrl}attendance/employee/attendance/${empId}/${currentDate}`,
+          {
+            headers:{
+              "Authorization": sessionStorage.getItem("Authorization"),
+
+            }
+          }
         );
         const data = response.data;
         if (data) {
@@ -58,13 +65,16 @@ const AttendanceForm = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Id": empId
+          "Id": empId,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token": xsrfToken
         },
         body: JSON.stringify({
           date: date,
           punchInMessage: punchInMessage,
           punchIn: punchIn,
         }),
+        withCredentials: true
       });
       setLoading(false);
       if (response.ok) {
@@ -115,7 +125,9 @@ const AttendanceForm = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Id": empId
+          "Id": empId,
+          "Authorization": sessionStorage.getItem('Authorization'),
+          "x-xsrf-token": xsrfToken
         },
         body: JSON.stringify({
           punchOut: punchOut,
@@ -125,6 +137,7 @@ const AttendanceForm = () => {
           date: attendanceData.date,
           name: attendanceData.name,
         }),
+        withCredentials: true
       });
       setLoading(false);
       setPunchOut("");
