@@ -41,7 +41,7 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
         headers: {
           "user_Id": localStorage.getItem("user_id"),
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":xsrfToken
+          //"x-xsrf-token":xsrfToken
         },
         withCredentials: true
       })

@@ -44,7 +44,7 @@ const LeaveApproval = () => {
           headers: {
             Id: empId,
             Authorization: sessionStorage.getItem("Authorization"),
-            "x-xsrf-token": xsrfToken,
+          // "x-xsrf-token": xsrfToken,
           },
           withCredentials: true,
         }

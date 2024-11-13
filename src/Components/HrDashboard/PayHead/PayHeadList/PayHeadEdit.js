@@ -28,7 +28,7 @@ const PayHeadEdit = () => {
       const response = await axios.get(`${apiUrl}payHeads/${payId}`,{
         headers: {
           Authorization: sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":xsrfToken
+          //"x-xsrf-token":xsrfToken
 
         },
         withCredentials: true
@@ -60,7 +60,7 @@ const PayHeadEdit = () => {
         headers: {
           "user_Id": storedId,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "X-Xsrf-Token":xsrfToken
+          //"x-xsrf-token":xsrfToken
         },
         withCredentials: true
       });

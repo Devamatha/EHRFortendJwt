@@ -94,7 +94,7 @@ function EmployeeList() {
             headers:{
               user_Id: storedId,
               "Authorization": sessionStorage.getItem('Authorization'),
-              "X-XSRF-TOKEN":xsrfToken
+              //"x-xsrf-token":xsrfToken
             },
             observe: 'response',
             credentials: 'include',

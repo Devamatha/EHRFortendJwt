@@ -27,7 +27,7 @@ const LeaveApprovalList = () => {
       const response = await axios.get(` ${apiUrl}employees/leave/${empId}`, {
         headers: {
           Authorization: sessionStorage.getItem("Authorization"),
-          "X-XSRF-TOKEN": xsrfToken,
+        // "x-xsrf-token": xsrfToken,
         },
         withCredentials: true,
       }); // Adjust the endpoint URL as needed

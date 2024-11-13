@@ -29,7 +29,8 @@ const xsrfToken = getXsrfToken();
             headers:{
               "Authorization": sessionStorage.getItem("Authorization"),
 
-            }
+            },
+            withCredentials: true
           }
         );
         const data = response.data;
@@ -59,21 +60,20 @@ const xsrfToken = getXsrfToken();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+    const formData = new FormData();
+    formData.append("date", date);
+    formData.append("punchInMessage", punchInMessage);
+    formData.append("punchIn", punchIn);
     try {
       const response = await fetch(`${apiUrl}attendance/employee/${empId}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          
           "Id": empId,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token": xsrfToken
+         // "x-xsrf-token": xsrfToken
         },
-        body: JSON.stringify({
-          date: date,
-          punchInMessage: punchInMessage,
-          punchIn: punchIn,
-        }),
+      body:  formData,
         withCredentials: true
       });
       setLoading(false);
@@ -120,23 +120,22 @@ const xsrfToken = getXsrfToken();
         console.error("No attendance data available");
         return;
       }
-
+      const formData = new FormData();
+      formData.append("punchIn",attendanceData.punchIn);
+      formData.append("punchOut",punchOut);
+      formData.append("punchInMessage",attendanceData.punchInMessage);
+      formData.append("punchOutMessage",punchOutMessage);
+      formData.append("date",attendanceData.date);
+      formData.append("name",attendanceData.name);
       const response = await fetch(`${apiUrl}attendance/update/${attendanceData.id}`, {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+          //"Content-Type": "application/json",
           "Id": empId,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token": xsrfToken
+         // "x-xsrf-token": xsrfToken
         },
-        body: JSON.stringify({
-          punchOut: punchOut,
-          punchOutMessage: punchOutMessage,
-          punchIn: attendanceData.punchIn,
-          punchInMessage: attendanceData.punchInMessage,
-          date: attendanceData.date,
-          name: attendanceData.name,
-        }),
+        body: formData,
         withCredentials: true
       });
       setLoading(false);
@@ -161,9 +160,11 @@ const xsrfToken = getXsrfToken();
       // console.log("Response:", await response.json());
     } catch (error) {
       setLoading(false);
+    //  console.error("Error updating attendance", error);
+
       Swal.fire({
-        title: error.respose.data.error,
-        text: error.response.data.message,
+        title: error.respose?.data?.message,
+        text: error.response?.data?.message,
         icon: "warning",
       });
       console.error("Error updating attendance", error);

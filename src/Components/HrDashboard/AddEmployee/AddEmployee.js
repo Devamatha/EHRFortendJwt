@@ -81,7 +81,7 @@ function AddEmployee() {
             "Content-Type": "application/json",
             user_Id: storedId,
             Authorization: sessionStorage.getItem("Authorization"),
-            "x-xsrf-token": xsrfToken,
+          // "x-xsrf-token": xsrfToken,
           },
 
           withCredentials: true,

@@ -81,7 +81,7 @@ function HolidayTableData() {
             headers:{
               user_Id: storedId,
           "Authorization": sessionStorage.getItem('Authorization'),
-          "x-xsrf-token":xsrfToken
+          //"x-xsrf-token":xsrfToken
             },
             observe: 'response',
             credentials: 'include',

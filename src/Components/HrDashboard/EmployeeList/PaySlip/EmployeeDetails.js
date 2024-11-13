@@ -52,7 +52,7 @@ const EmployeeDetails = () => {
         {
           headers: {
             "Authorization": sessionStorage.getItem('Authorization'),
-            "x-xsrf-token":xsrfToken``
+            //"x-xsrf-token":xsrfToken``
           },  
           observe: 'response',
           credentials: 'include',

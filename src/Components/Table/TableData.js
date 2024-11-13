@@ -80,7 +80,7 @@ function TableData() {
               "Content-Type": "application/json",
               "user_Id": storedId,
               "Authorization": sessionStorage.getItem('Authorization'),
-              "X-XSRF-TOKEN":xsrfToken
+              //"x-xsrf-token":xsrfToken
             },
     
                withCredentials: true,
