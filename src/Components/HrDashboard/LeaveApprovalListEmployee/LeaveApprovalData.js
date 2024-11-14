@@ -56,7 +56,7 @@ function LeaveApprovalData() {
         headers: {
           user_Id: storedId,
           Authorization: sessionStorage.getItem("Authorization"),
-          x_xsrf_token: sessionStorage.getItem("XSRF-TOKEN"),
+         // x_xsrf_token: sessionStorage.getItem("XSRF-TOKEN"),
         },
         observe: "response",
         credentials: "include",

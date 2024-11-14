@@ -75,12 +75,6 @@ function Login() {
         if (response.ok) {
           const data = await response.json();
           window.sessionStorage.setItem("Authorization",response.headers.get('Authorization'));
-           //const model = data;
-          //this.model.authStatus = 'AUTH'
-          window.sessionStorage.setItem("userdetails",JSON.stringify(data));
-          //window.sessionStorage.setItem("XSRF-TOKEN",getCookie('XSRF-TOKEN'));
-          window.sessionStorage.setItem("XSRF-TOKEN",Cookies.get('XSRF-TOKEN'));
-
           Swal.fire({
             icon: "success",
             title: "Login Successful",

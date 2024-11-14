@@ -10,7 +10,14 @@ const ViewNotification = () => {
   const getEmployee = async () => {
     try {
       const response = await fetch(
-        `${apiUrl}notifications/employee/${empid}`
+        `${apiUrl}notifications/employee/${empid}`,{
+          headers: {
+            "Authorization": sessionStorage.getItem("Authorization"),
+          },
+         // withCredentials: true
+        }
+        
+
       );
       if (response.ok) {
         const data = await response.json();
