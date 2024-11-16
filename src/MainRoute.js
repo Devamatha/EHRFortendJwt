@@ -80,6 +80,7 @@ const MainRoute = () => {
           <Route path="/hrdashboard/PersonalInformationTable" element={<PersonalInformationTable />} />
           <Route path="/hrdashboard/payslip/:empid" element={<EmployeeDetails />} />
           <Route path="/hrdashboard/example" element={<Example />} />
+
           <Route path="/hrdashboard/UpgradePlan" element={<UpgradePlan />} />
         </Route>
         
@@ -87,8 +88,11 @@ const MainRoute = () => {
           <Route path="/AdminDashboard/usersList" element={<UsersList />} />
           <Route path="/AdminDashboard/Home" element={<Home />} />
           <Route path="/AdminDashboard/addPackage" element={<AddPackage />} />
-          <Route path="/AdminDashboard/PricingContainer" element={<PricingContainer />} />
-        </Route>
+          <Route path="/AdminDashboard/PricingContainer" element={<PricingContainer />} /> 
+
+          <Route path="/AdminDashboard/Signup" element={<SignUp />} />
+
+                 </Route>
         
         <Route path="/interviewlogin" element={<InterviewLogin />} />
         <Route path="/ViewNotification/:empid" element={<ViewNotification />} />

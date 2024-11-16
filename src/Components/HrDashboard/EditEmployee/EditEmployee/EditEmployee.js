@@ -121,7 +121,7 @@ const EditEmployee = () => {
       >
         <h5 className="text-center  text-light ">EmployeeDetails</h5>
         <div className="row">
-          <div className="col-12 col-md-4 col-lg-4 mt-1 ">
+          {/* <div className="col-12 col-md-4 col-lg-4 mt-1 ">
             <label className="col-sm-4 col-form-label text-light">
               Full Name:
             </label>
@@ -133,8 +133,8 @@ const EditEmployee = () => {
               value={employee.fullName || ""}
               onChange={handleChange}
             />
-          </div>
-          <div className="col-12 col-md-4 col-lg-4 mt-1">
+          </div> */}
+          {/* <div className="col-12 col-md-4 col-lg-4 mt-1">
             <label className="col-sm-4 col-form-label text-light">
               Employee Code:
             </label>
@@ -145,7 +145,7 @@ const EditEmployee = () => {
               value={employee.empCode || ""}
               onChange={handleChange}
             />
-          </div>
+          </div> */}
           <div className="col-12 col-md-4 col-lg-4 mt-1">
             <label className="col-sm-4 col-form-label text-light">
               Date of Birth:
@@ -157,6 +157,39 @@ const EditEmployee = () => {
               value={employee.dob ? employee.dob.slice(0, 10) : ""}
               onChange={handleChange}
             />
+          </div>
+
+          <div className="col-12 col-md-4 col-lg-4 mt-1">
+            <label className="col-sm-4 col-form-label text-light">
+              Country:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="country"
+              value={employee.country || ""}
+              onChange={handleChange}
+            />
+          </div>
+
+          
+          <div className="col-12  col-md-6 col-lg-4 mt-1">
+            <label
+              htmlFor="inputemployeeType"
+              className="col-sm-4 col-form-label text-light"
+            >
+              EmployeeType
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="inputemployeeType"
+              placeholder="employeeType"
+              value={employee.employeeType}
+              required
+              onChange={handleChange}
+            />
+
           </div>
         </div>
         <div className="row">
@@ -248,19 +281,8 @@ const EditEmployee = () => {
         </div>
 
         <div className="row">
-          <div className="col-12 col-md-4 col-lg-4 mt-1">
-            <label className="col-sm-4 col-form-label text-light">
-              Country:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="country"
-              value={employee.country || ""}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="col-12 col-md-4 col-lg-4 mt-1">
+       
+          {/* <div className="col-12 col-md-4 col-lg-4 mt-1">
             <label className="col-sm-4 col-form-label text-light">
               Email ID:
             </label>
@@ -271,8 +293,8 @@ const EditEmployee = () => {
               value={employee.emailId || ""}
               onChange={handleChange}
             />
-          </div>
-          <div className="col-12 col-md-4 col-lg-4 mt-1">
+          </div> */}
+          {/* <div className="col-12 col-md-4 col-lg-4 mt-1">
             <label className="col-sm-4 col-form-label text-light">
               Contact Number:
             </label>
@@ -283,7 +305,7 @@ const EditEmployee = () => {
               value={employee.contactNo || ""}
               onChange={handleChange}
             />
-          </div>
+          </div> */}
         </div>
         <div className="row">
           <div className="col-12 col-md-4 col-lg-4 mt-1">
@@ -367,24 +389,6 @@ const EditEmployee = () => {
 
 
         
-          <div className="col-12  col-md-6 col-lg-4 mt-1">
-            <label
-              htmlFor="inputemployeeType"
-              className="col-sm-4 col-form-label text-light"
-            >
-              EmployeeType
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="inputemployeeType"
-              placeholder="employeeType"
-              value={employee.employeeType}
-              required
-              onChange={handleChange}
-            />
-
-          </div>
           <div className="col-12 col-md-4 col-lg-6 mt-1">
             <label className="col-sm-4 col-form-label text-light">
               Pan No:

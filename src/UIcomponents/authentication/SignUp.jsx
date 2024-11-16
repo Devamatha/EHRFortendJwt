@@ -71,37 +71,37 @@ function SignUp() {
     setIsLoading(true);
     e.preventDefault();
     const validationErrors = {};
-    // if (!formData.fullName) {
-    //   validationErrors.fullName = "Please enter your name";
-    // }
-    // if (!formData.email) {
-    //   validationErrors.email = "Please enter your email";
-    // } else if (!isValidEmail(formData.email)) {
-    //   validationErrors.email = "Please enter a valid email";
-    // }
-    // if (!formData.mobileNumber) {
-    //   validationErrors.mobileNumber = "Please enter your mobileNumber number";
-    // } else if (formData.mobileNumber.length !== 10) {
-    //   validationErrors.mobileNumber = "mobileNumber number must be 10 digits";
-    // }
-    // if (!formData.companyName) {
-    //   validationErrors.companyName = "Please enter your company name";
-    // }
-    // if (!formData.authorizedCompanyName) {
-    //   validationErrors.authorizedCompanyName =
-    //     "Please enter your authorized company name";
-    // }
-    // if (!formData.logo) {
-    //   validationErrors.logo = "Please enter logo";
-    // }
+    if (!formData.fullName) {
+      validationErrors.fullName = "Please enter your name";
+    }
+    if (!formData.email) {
+      validationErrors.email = "Please enter your email";
+    } else if (!isValidEmail(formData.email)) {
+      validationErrors.email = "Please enter a valid email";
+    }
+    if (!formData.mobileNumber) {
+      validationErrors.mobileNumber = "Please enter your mobileNumber number";
+    } else if (formData.mobileNumber.length !== 10) {
+      validationErrors.mobileNumber = "mobileNumber number must be 10 digits";
+    }
+    if (!formData.companyName) {
+      validationErrors.companyName = "Please enter your company name";
+    }
+    if (!formData.authorizedCompanyName) {
+      validationErrors.authorizedCompanyName =
+        "Please enter your authorized company name";
+    }
+    if (!formData.logo) {
+      validationErrors.logo = "Please enter logo";
+    }
 
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
-    // if (!formData.address) {
-    //   validationErrors.address = "Please enter Address";
-    // }
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    if (!formData.address) {
+      validationErrors.address = "Please enter Address";
+    }
 
     // const formDataToSend = new FormData();
     // Object.keys(formData).forEach((key) => {
@@ -147,48 +147,49 @@ function SignUp() {
   const handleSubmitForm = async (payDetails,e) => {
     setIsLoading(true);
     e.preventDefault();
-    const validationErrors = {};
-    if (!formData.fullName) {
-      validationErrors.fullName = "Please enter your name";
-    }
-    if (!formData.email) {
-      validationErrors.email = "Please enter your email";
-    } else if (!isValidEmail(formData.email)) {
-      validationErrors.email = "Please enter a valid email";
-    }
-    if (!formData.mobileNumber) {
-      validationErrors.mobileNumber = "Please enter your mobileNumber number";
-    } else if (formData.mobileNumber.length !== 10) {
-      validationErrors.mobileNumber = "mobileNumber number must be 10 digits";
-    }
-    if (!formData.companyName) {
-      validationErrors.companyName = "Please enter your company name";
-    }
-    if (!formData.authorizedCompanyName) {
-      validationErrors.authorizedCompanyName =
-        "Please enter your authorized company name";
-    }
-    if (!formData.logo) {
-      validationErrors.logo = "Please enter logo";
-    }
+    // const validationErrors = {};
+    // if (!formData.fullName) {
+    //   validationErrors.fullName = "Please enter your name";
+    // }
+    // if (!formData.email) {
+    //   validationErrors.email = "Please enter your email";
+    // } else if (!isValidEmail(formData.email)) {
+    //   validationErrors.email = "Please enter a valid email";
+    // }
+    // if (!formData.mobileNumber) {
+    //   validationErrors.mobileNumber = "Please enter your mobileNumber number";
+    // } else if (formData.mobileNumber.length !== 10) {
+    //   validationErrors.mobileNumber = "mobileNumber number must be 10 digits";
+    // }
+    // if (!formData.companyName) {
+    //   validationErrors.companyName = "Please enter your company name";
+    // }
+    // if (!formData.authorizedCompanyName) {
+    //   validationErrors.authorizedCompanyName =
+    //     "Please enter your authorized company name";
+    // }
+    // if (!formData.logo) {
+    //   validationErrors.logo = "Please enter logo";
+    // }
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    if (!formData.address) {
-      validationErrors.address = "Please enter Address";
-    }
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
+    // if (!formData.address) {
+    //   validationErrors.address = "Please enter Address";
+    // }
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
     });
+    formDataToSend.append("role","ROLE_HR")
 
     // console.log(Id, "Id");
     try {
       const response = await axios.post(
-        `${apiUrl}users/register`,
+        `${apiUrl}clients/save`,
         formDataToSend,
         {
           headers: {
@@ -210,7 +211,7 @@ function SignUp() {
       });
       setIsLoading(false);
 
-      subScriptionadd(payDetails, response.data.user_Id
+      subScriptionadd(payDetails, response.data.id
       );
       // console.log("Success:", response.data);
     } catch (error) {
@@ -231,7 +232,7 @@ function SignUp() {
     var options = {
       key: "rzp_test_P7eTEWTbR1y2Sm",
       key_secret: "gFMj8IVEIJuIKBOEeqRzslPt",
-      amount: 10 * 100,
+      amount: payDetails.amount * 100,
       currency: "INR",
       name: "Get Photo Application",
       description: "Sample Razorpay demo",

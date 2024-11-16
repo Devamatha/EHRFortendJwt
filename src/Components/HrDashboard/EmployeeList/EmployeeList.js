@@ -196,7 +196,7 @@ function EmployeeList() {
                 <th>JoiningDate</th>
                 <th>BloodGroup</th>
                 {/* <th>Password</th> */}
-                <th>Role</th>
+                {/* <th>Role</th> */}
                 <th>Designation</th>
                 <th>Department</th>
                 <th>PANNo</th>
@@ -229,7 +229,7 @@ function EmployeeList() {
                   <td>{job.joiningDate}</td>
                   <td>{job.bloodGroup}</td>
                   {/* <td>{job.password}</td> */}
-                  <td>{job.role}</td>
+                  {/* <td>{job.role}</td> */}
                   <td>{job.department}</td>
                   <td>{job.designation}</td>
                   <td>{job.panNo}</td>

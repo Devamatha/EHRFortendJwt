@@ -140,7 +140,7 @@ const EmployeeDetails = () => {
         ],
         [
           "Employee Name",
-          employeedata?.fullName,
+          userdata?.employeeFullName,
           "Bank Account",
           employeedata?.bankAccountNo || "N/A",
         ],
@@ -302,12 +302,13 @@ const EmployeeDetails = () => {
 
                   <tr>
                     <td>Employee Name</td>
-                    <td>{employeedata?.fullName}</td>
+                    <td>{userdata?.employeeFullName
+                    }</td>
                   </tr>
 
                   <tr>
                     <td>Designation</td>
-                    <td>{employeedata?.role}</td>
+                    <td>{employeedata?.designation}</td>
                   </tr>
 
                   <tr>
