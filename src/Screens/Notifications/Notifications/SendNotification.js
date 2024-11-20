@@ -12,8 +12,9 @@ const SendNotification = () => {
   const [messageType, setMessageType] = useState("");
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+  const userId = localStorage.getItem("user_id");
+
   useEffect(() => {
-    const userId = localStorage.getItem("user_id");
     setSenderId(userId);
 
     if (userId) {
@@ -24,7 +25,12 @@ const SendNotification = () => {
   const getTheEmployees = async (userId) => {
     try {
       const res = await axios.get(
-        `${apiUrl}users/${userId}/employees`
+        `${apiUrl}users/${userId}/employees`,{
+          headers: {
+            "Authorization": sessionStorage.getItem("Authorization"),
+          },
+          withCredentials: true
+        }
       );
       setEmployees(res.data);
       // console.log(res);
@@ -62,6 +68,13 @@ const SendNotification = () => {
           receivers: selectedEmployees,
           messageContent,
           messageType,
+        },
+        {
+          headers: {
+            Authorization: sessionStorage.getItem("Authorization"),
+            "user_Id": userId,
+          },
+          withCredentials: true
         }
       );
       setResponse(res.data);

@@ -8,7 +8,7 @@ function UpgradePlan() {
   const [plans, setPlans] = useState([]);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const userId=localStorage.getItem('user_id');
+  const userId = localStorage.getItem("user_id");
   const getSubscriptionPlans = () => {
     axios
       .get(`${apiUrl}plan/getAll`)
@@ -21,12 +21,12 @@ function UpgradePlan() {
         // console.log(error);
       });
   };
-  var payNow = (response,  payDetails) => {
+  var payNow = (response, payDetails) => {
     // console.log(response.data.oder_id, "response.data.oder_id");
     var options = {
       key: "rzp_test_P7eTEWTbR1y2Sm",
       key_secret: "gFMj8IVEIJuIKBOEeqRzslPt",
-      amount: 10 * 100,
+      amount: payDetails.amount * 100,
       currency: "INR",
       name: "Get Photo Application",
       description: "Sample Razorpay demo",
@@ -39,7 +39,6 @@ function UpgradePlan() {
         alert(response.razorpay_order_id, "success");
         alert(response.razorpay_signature, "success");
         subScriptionadd(payDetails);
-       
       },
       prefill: {
         name: "Gaurav Kumar",
@@ -83,7 +82,7 @@ function UpgradePlan() {
       // console.log("Server Response:", response.data.oder_id);
 
       if (payDetails.amount && payDetails.planType) {
-        payNow(response,  payDetails);
+        payNow(response, payDetails);
       } else {
         Swal.fire({
           title: "paydetails details ?",
@@ -99,50 +98,52 @@ function UpgradePlan() {
     getSubscriptionPlans();
   }, []);
   const upgradePlans = (plan) => {
-     console.log(plan+"plan");
-     const payDetails = plan;
-     // console.log(payDetails + "payDetails");
-     // console.log(payDetails.amount + "amount");
-     const payDetailslist = {
-       amount: payDetails.amount,
-       planType: payDetails.planType,
-       totalResumes: payDetails.totalResumes,
-     };
-     
-     if (payDetailslist.amount) {
-       generateOrderId(payDetailslist);
-     } else {
-       Swal.fire({
-         title: "please select the plan details ?",
-         text: "please select the plan details ?",
-         icon: "info",
-       });
-     }
+    console.log(plan + "plan");
+    const payDetails = plan;
+    // console.log(payDetails + "payDetails");
+    // console.log(payDetails.amount + "amount");
+    const payDetailslist = {
+      amount: payDetails.amount,
+      planType: payDetails.planType,
+      totalResumes: payDetails.totalResumes,
+    };
+
+    if (payDetailslist.amount) {
+      generateOrderId(payDetailslist);
+    } else {
+      Swal.fire({
+        title: "please select the plan details ?",
+        text: "please select the plan details ?",
+        icon: "info",
+      });
+    }
   };
 
   const subScriptionadd = async (payDetails) => {
     try {
       const response = await axios.post(
-       ` ${apiUrl}subscriptions/upgrade/${userId}`,
-        payDetails
+        ` ${apiUrl}subscriptions/upgrade/${userId}`,
+        payDetails,
+        {
+          headers: {
+            "Authorization": sessionStorage.getItem("Authorization"),
+          },
+          withCredentials: true,
+        }
       );
       Swal.fire({
         title: "form Submitted Successfully",
         text: "Data saved successfully",
         icon: "success",
       });
-      // console.log("Server Response:", response.data.subscription_Id);
-      // console.log("Amount:", payDetails.amount);
-      // console.log("Server Response:", response.data.oder_id);
-
-      //handleSubmitForm(e, response.data.subscription_Id);
+      
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
         title: error.error,
         text: error.message,
         icon: "error",
-      })
+      });
     }
   };
   return (
@@ -193,8 +194,6 @@ function UpgradePlan() {
           );
         })}
       </div>
-
-     
     </div>
   );
 }

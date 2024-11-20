@@ -32,7 +32,7 @@ function LoginPage() {
         Swal.fire({
           icon: "error",
           title: "Login Failed",
-          text: errorData.error || "Login failed. Please try again.",
+          text: errorData.message || "Login failed. Please try again.",
         });
       } else {
         const data = await response.json();

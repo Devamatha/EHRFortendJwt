@@ -105,8 +105,8 @@ const ViewNotification = () => {
                 </div>
 
                 <div className="text-wrap text-center">
-                  <strong>From:</strong> {notification.sender.fullName} (
-                  {notification.sender.email})
+                  <strong>From:</strong> {notification.fullName} (
+                  {notification.email})
                   <br />
                   <strong>Date:</strong>
                   {new Date(notification.timestamp).toLocaleString()}

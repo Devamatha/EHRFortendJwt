@@ -110,7 +110,7 @@ function Login() {
           Swal.fire({
             icon: "error",
             title: "Login Failed",
-            text: errorData.error || "Login failed. Please try again.",
+            text: errorData.message || "Login failed. Please try again.",
           });
           setLoading(false);
         }
