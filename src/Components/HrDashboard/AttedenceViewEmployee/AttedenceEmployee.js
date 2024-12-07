@@ -96,6 +96,7 @@ Swal.fire({
             <tr>
               <th>S.No</th>
               <th>Name</th>
+              <th>Date</th>
               <th>Punch In</th>
               <th>Punch Out</th>
               <th>Punch In Message</th>
@@ -108,6 +109,7 @@ Swal.fire({
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{attendance.name}</td>
+                <td>{attendance.date}</td>
                 <td>{attendance.punchIn}</td>
                 <td>{attendance.punchOut}</td>
                 <td>{attendance.punchInMessage}</td>

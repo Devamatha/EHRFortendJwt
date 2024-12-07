@@ -67,7 +67,6 @@ const PayHeadEdit = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        //  setErrorMessage(errorData.error || "Login failed. Please try again.");
         Swal.fire({
           icon: "error",
           title: errorData.message,
@@ -77,8 +76,7 @@ const PayHeadEdit = () => {
 
       } else {
         const data = await response.json();
-        // Handle successful login, e.g., store JWT token, redirect to another page, etc.
-        // console.log("Login successful:", data);
+       
         Swal.fire({
           icon: "success",
           title: " Pay Head updated  Successfullyl",
@@ -166,7 +164,7 @@ const PayHeadEdit = () => {
                 <option value="" disabled>
                   Select PayHead Type
                 </option>
-                <option value="Earninga">Earnings</option>
+                <option value="Earning">Earnings</option>
                 <option value="Deductions">Deductions</option>
               </select>
             </div>

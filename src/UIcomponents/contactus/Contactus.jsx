@@ -126,13 +126,11 @@ const environment = process.env.REACT_APP_NODE_ENV;
       });
 
       if (response.status === 200) {
-        setShowPopup(true); // Show success popup
-        // Reset form data
+        setShowPopup(true);
         setFormData({ name: '', email: '', comment: '' });
       }
     } catch (error) {
       console.error('Error sending email:', error);
-      // Handle error (you can set an error state here if needed)
     }
   };
 

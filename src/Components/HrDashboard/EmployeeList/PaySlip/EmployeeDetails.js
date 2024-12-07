@@ -17,6 +17,8 @@ const EmployeeDetails = () => {
   const [userdata, setUserdata] = useState({});
   const [totalEarnings, setTotalEarnings] = useState(0);
   const [totalDeductions, setTotalDeductions] = useState(0);
+  const [payableDays ,SetPayableDays] = useState('');
+  const[remainDays,SetRemainingDays] = useState('');
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const employeeGet = () => {
@@ -46,7 +48,6 @@ const EmployeeDetails = () => {
   };
 
   const getHrDetails = (id) => {
-    // const user_id = localStorage.getItem("user_id");
     axios
       .get(`${apiUrl}employees/addPayHeaddetails/${id}`,
         {
@@ -56,7 +57,7 @@ const EmployeeDetails = () => {
           },  
           observe: 'response',
           credentials: 'include',
-             withCredentials: true,
+            withCredentials: true,
         }
       )
       .then((response) => {
@@ -166,13 +167,13 @@ const EmployeeDetails = () => {
           "Department",
           employeedata?.department || "N/A",
           "Payable",
-          employeedata?.totalDays || "N/A",
+          payableDays || "N/A",
         ],
         [
           "Date of Joining",
           employeedata.joiningDate,
           "Taken/Remaining Leave",
-          "23/23",
+          remainDays || "N/A",
         ],
       ],
       theme: "striped",
@@ -408,14 +409,16 @@ const EmployeeDetails = () => {
                   <tr>
                     <td>Payable Days</td>
                     <td>
-                      <input className="formControl"/> 
+                      <input className="formControl text-danger" type="number" value={payableDays}
+                       onChange={(e) => SetPayableDays(e.target.value)}
+                       /> 
                     </td>
                   </tr>
 
                   <tr>
                     <td>Taken/Remaining Leave  Days</td>
                     <td>
-                      <input  className="formControl"/>
+                      <input  className="formControl text-danger" type="number" value={remainDays} onChange={(e) => SetRemainingDays(e.target.value)} />
                     </td>
                   </tr>
                 </tbody>

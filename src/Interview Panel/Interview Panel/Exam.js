@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
-
+import { useNavigate } from "react-router-dom";
 const Exam = () => {
   const Ref = useRef(null);
   const { emailid } = useParams();
@@ -14,65 +14,29 @@ const Exam = () => {
   const [userDetails, setUserDetails] = useState({});
   const [timer, setTimer] = useState("00:00:00");
   const [currentIndex, setCurrentIndex] = useState(0);
-  // const [examStarted, setExamStarted] = useState(false);
   const [questions, setQuestions] = useState([]);
-  // const [showModal, setShowModal] = useState(false);
   const [answers, setAnswers] = useState([]);
   const [exitExam, setExitExam] = useState(false);
-  // const [output, setOutput] = useState({});
   const [isQuestions, setIsQuestions] = useState(false);
-  // console.log(isQuestions, "isQuestions");
   const apiUrl = process.env.REACT_APP_DB;
   const [loading, setLoading] = useState(false);
   const environment = process.env.REACT_APP_NODE_ENV;
   const [timeLeft, setTimeLeft] = useState(60);
-  // useEffect(() => {
-  //   const handleBeforeUnload = (e) => {
-  //     e.preventDefault();
-  //     e.returnValue =
-  //       "Are you sure you want to leave the exam? Your progress may not be saved.";
-  //   };
-
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
-
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const handleVisibilityChange = () => {
-  //     if (document.hidden) {
-  //       alert(
-  //         "You have switched tabs or minimized the window. Please stay on the exam page."
-  //       );
-  //     }
-  //   };
-
-  //   document.addEventListener("visibilitychange", handleVisibilityChange);
-
-  //   return () => {
-  //     document.removeEventListener("visibilitychange", handleVisibilityChange);
-  //   };
-  // }, []);
-
+  const navigate = useNavigate();
   const getCandidateDetails = async () => {
     try {
       const response = await axios.get(`${apiUrl}candidates/exam/${emailid}`);
       if (response) {
         setUserDetails(response.data);
-        // console.log(response.data);
-        //verifiyEmail(response.data);
+    
 
         if (response.data.examStatus == true) {
           setIsVerified(true);
           if (response.data.candidateId) {
             getter(response.data.candidateId);
           }
-          // console.log(response.data);
         } else {
           setIsVerified(false);
-          // console.log(response.data);
           Swal.fire({
             title:
               "plase attend Interview at " +
@@ -86,15 +50,16 @@ const Exam = () => {
               response.data?.interviewTime,
             icon: "warning",
           });
+          navigate("/");
         }
       }
     } catch (error) {
-      // console.log(error);
       Swal.fire({
-        title: error.response.data.message,
-        text: error.response.data.message,
+        title: error.response.data?.message,
+        text: error.response.data?.message,
         icon: "error",
       });
+      navigate("/");
     }
   };
 
@@ -146,39 +111,6 @@ const Exam = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const handleKeyDown = (e) => {
-  //     if (e.ctrlKey && (e.key === "t" || e.key === "n")) {
-  //       e.preventDefault();
-  //       alert("Opening a new tab is disabled during the exam.");
-  //     }
-
-  //     if (e.altKey && e.key === "Tab") {
-  //       e.preventDefault();
-  //       alert("Switching tabs is disabled during the exam.");
-  //     }
-  //   };
-
-  //   document.addEventListener("keydown", handleKeyDown);
-
-  //   return () => {
-  //     document.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
-
-  // useEffect(() => {
-  //   const handleUnload = (e) => {
-  //     // console.log(
-  //       "Page is being unloaded. Possible navigation or refresh attempt."
-  //     );
-  //   };
-
-  //   window.addEventListener("unload", handleUnload);
-
-  //   return () => {
-  //     window.removeEventListener("unload", handleUnload);
-  //   };
-  // }, []);
   useEffect(() => {
     const timerInterval = setInterval(() => {
       setTimeLeft((prevTimeLeft) => (prevTimeLeft > 0 ? prevTimeLeft - 1 : 0));
@@ -189,60 +121,9 @@ const Exam = () => {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
-  const verifiyEmail = (responsedata) => {
-    // console.log(responsedata + "email");
-    axios
-      .get(`${apiUrl}candidates/verify`, {
-        params: {
-          email: responsedata.emailID,
-        },
-        
-      })
-      .then((response) => {
-        if (response.data == true) {
-          setIsVerified(true);
-          if (responsedata.candidateId) {
-            getter(responsedata.candidateId);
-          }
-          // console.log(response.data);
-        } else {
-          setIsVerified(false);
-          // console.log(response.data);
-          Swal.fire({
-            title:
-              "plase attend Interview at " +
-              responsedata?.interviewDate +
-              " Time is " +
-              responsedata?.interviewTime,
-            text:
-              "Sorry to say u cannot write exam at the time please try at  " +
-              responsedata?.interviewDate +
-              " Time is " +
-              responsedata?.interviewTime,
-            icon: "warning",
-          });
-        }
-      })
-      .catch((error) => {
-        // console.log(error.error.message);
-        // console.log(error);
-        // console.log(error.message);
-        // console.log(error.response.data.message);
+  
 
-        Swal.fire({
-          title: error.response.data.message,
-          text: error.response.data.message,
-          icon: "error",
-        });
-      });
-  };
-
-  // useEffect(() => {
-  //   // console.log("Component mounted or updated");
-  //   return () => {
-  //     // console.log("Component unmounted");
-  //   };
-  // }, []);
+ 
 
   const Input = {
     TotalExamMarks: 20,
@@ -286,8 +167,6 @@ const Exam = () => {
       ),
     };
 
-    // console.log("Updated Input:", updatedInput);
-
     try {
       const response = await axios.post(
         `https://hook.eu2.make.com/5a0umo82ii6z8j0gmcl84v8hs1xyq00p`,
@@ -303,26 +182,19 @@ const Exam = () => {
     try {
       setLoading(true);
       const result = await fetchResults();
-      //  setOutput(result);
-      // console.log("Fetched result:", result);
-
       let finalOutput = {
         ...result,
         answers: answers,
       };
-
-      // console.log("Final Output before sending:", finalOutput);
 
       const response = await axios.post(
         `${apiUrl}interviews/save-answers/${userDetails.candidateId}`,
         finalOutput
       );
 
-      // console.log("Answers saved successfully");
       setExitExam(true);
       setLoading(false);
     } catch (error) {
-      // console.log("Error saving answers:", error);
       setLoading(false);
       Swal.fire({
         title: error.response.data.error,
@@ -383,20 +255,12 @@ const Exam = () => {
     Ref.current = id;
   };
 
-  // useEffect(() => {
-
-  //   return () => {
-  //     if (Ref.current) clearInterval(Ref.current);
-  //   };
-  // }, []);
 
   const handleStartExam = () => {
     clearTimer(totalTime);
   };
 
-  const onClickReset = () => {
-    clearTimer(totalTime);
-  };
+ 
 
   const handleAnswerSubmit = (index, answer) => {
     if (index < questions.length - 1) {
@@ -405,22 +269,17 @@ const Exam = () => {
       setStatuses(newStatuses);
       setCurrentIndex(index + 1);
     } else {
-      // // console.log("Exam finished");
       setLastQuestionSubmitted(true);
     }
   };
 
   const handleTimeUp = (index) => {
-    // console.log("handleTimeUp method" + index);
-    // console.log(questions.length + "questions.length");
     if (index < questions.length - 1) {
       const newStatuses = [...statuses];
       newStatuses[index] = "timed-out";
       setStatuses(newStatuses);
       setCurrentIndex(index + 1);
     } else {
-      // console.log("Exam finished");
-
       setLastQuestionSubmitted(true);
     }
   };
@@ -439,7 +298,7 @@ const Exam = () => {
             <>
               <div className="">
                 <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                  <a className="navbar-brand" href="#">
+                  <a className="navbar-brand">
                     <img src="/logo192.png" alt="logo" class="responsive" />
                   </a>
                   <h6 className="text-light text-center">{emailid}</h6>
@@ -472,18 +331,7 @@ const Exam = () => {
             </>
           ) : (
             <>
-              {/* <div
-                class="d-flex justify-content-center align-items-center"
-                style={{ height: "100vh" }}
-              >
-                <div
-                  class="spinner-border text-light"
-                  role="status"
-                  style={{ width: "5rem", height: "5rem" }}
-                >
-                  <span class="sr-only text-light">Loading...</span>
-                </div>
-              </div> */}
+           
 
               <div className="container mb-3 text-light">
                 <h1 className="text-center mb-4">Interview Starting Soon</h1>

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./Question.css";
-import { Button,Spinner } from "react-bootstrap";
+import { Button, Spinner } from "react-bootstrap";
+import debounce from 'lodash.debounce';
+
 function Question({
   question,
   index,
@@ -11,7 +13,6 @@ function Question({
   lastQuestionSubmitted,
   saveTotalResult,
   loading,
-  isQuestions
 }) {
   const [answer, setAnswer] = useState("");
   const minimumTime = question?.minimumTime || 0;
@@ -19,21 +20,8 @@ function Question({
 
   useEffect(() => {
     setAnswer("");
-  }, [question, index]);
-
-  useEffect(() => {
-    if (answer.trim()) {
-      saveAllAnswers((prevAnswers) => {
-        const updatedAnswers = [...prevAnswers];
-        updatedAnswers[index] = answer;
-        return updatedAnswers;
-      });
-    }
-  }, [answer, index, saveAllAnswers]);
-
-  useEffect(() => {
     setTimeLeft(minimumTime);
-  }, [minimumTime, index]);
+  }, [question, index, minimumTime]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -51,11 +39,18 @@ function Question({
     return () => clearInterval(timer);
   }, [index, onTimeUp]);
 
-  const handleAnswerChange = (e) => {
+  const handleAnswerChange = useCallback(debounce((newValue) => {
+    saveAllAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[index] = newValue;
+      return updatedAnswers;
+    });
+  }, 300), [index, saveAllAnswers]);
+
+  const onChange = (e) => {
     const newValue = e.target.value;
-    if (newValue !== answer) {
-      setAnswer(newValue);
-    }
+    setAnswer(newValue);
+    handleAnswerChange(newValue);
   };
 
   const handleSubmit = () => {
@@ -64,12 +59,16 @@ function Question({
 
   return (
     <>
-      {/* {lastQuestionSubmitted && isQuestions ? ( */}
-      {lastQuestionSubmitted ?(
-        <>
+      {lastQuestionSubmitted ? (
+        <div>
           <h1 className="text-light">
-          To complete exam please click on Submit Exam Button
-            <Button variant="success outline-suceess" onClick={saveTotalResult}  disabled={loading}> {loading ? (
+            To complete the exam, please click on Submit Exam Button
+            <Button
+              variant="success outline-success"
+              onClick={saveTotalResult}
+              disabled={loading}
+            >
+              {loading ? (
                 <>
                   <Spinner
                     as="span"
@@ -82,28 +81,29 @@ function Question({
                 </>
               ) : (
                 "Submit Exam"
-              )}</Button>
+              )}
+            </Button>
           </h1>
-        </>
+        </div>
       ) : (
         <div style={{ padding: "20px" }}>
           <div className="inside p-3">
             <h2 className="text-light">
-              Question <span className="text-info"> {index + 1} </span> of
-              {totalQuestions}
+              Question <span className="text-info">{index + 1}</span> of {totalQuestions}
             </h2>
             <h5 className="question text-light">
-              <span> Q)</span> {question?.question}
+              <span>Q)</span> {question?.question}
             </h5>
             <textarea
               className="form-control"
               value={answer}
-              onInput={handleAnswerChange}
+              onChange={onChange}
               style={{ width: "100%", height: "200px" }}
-              disabled={timeLeft <= 0}
+              placeholder="Type your answer here..."
+              disabled={timeLeft <= 0} // Disable when time is up
             />
             <div>
-              <p className="text-light">
+              <p className={`text-light ${timeLeft <= 10 ? 'text-danger' : ''}`}>
                 Time Remaining for this Question: {timeLeft} seconds
               </p>
               <button
@@ -122,5 +122,3 @@ function Question({
 }
 
 export default Question;
-
-

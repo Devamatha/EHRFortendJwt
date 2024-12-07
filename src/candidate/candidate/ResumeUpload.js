@@ -38,12 +38,12 @@ const ResumeUpload = () => {
           body: formData,
           headers: {
             user_Id: storedId,
-            "Authorization": sessionStorage.getItem("Authorization"),
-          // "x-xsrf-token": xsrfToken,
+            Authorization: sessionStorage.getItem("Authorization"),
+            // "x-xsrf-token": xsrfToken,
           },
           observe: "response",
           credentials: "include",
-             withCredentials: true,
+          withCredentials: true,
         }
       );
 
@@ -60,9 +60,6 @@ const ResumeUpload = () => {
             const webhookFormData = new FormData();
             webhookFormData.append("jobRole", errorData.jobRole);
             webhookFormData.append("resumeTextData", errorData.resumeTextData);
-            // webhookFormData.append('startTime',fromTime);
-            // webhookFormData.append('endime',toTime);
-            // webhookFormData.append('timestamp', new Date().toISOString());
 
             const webhookResponse = await axios.post(
               "https://hook.eu2.make.com/6srs49d44nt3qxfkw9jwo4kq2c8h89q9",
@@ -73,12 +70,31 @@ const ResumeUpload = () => {
                 },
               }
             );
-            const jsonResponse = JSON.stringify(webhookResponse.data);
 
-            const responseObject = JSON.parse(jsonResponse);
-            const openPositions = responseObject["Open Positions"][0];
+            const responseData = webhookResponse.data;
+
+            console.log(responseData, "webhookResponse.data");
+
+            let openPositions = {};
+
+            if (
+              typeof responseData === "object" &&
+              !Array.isArray(responseData)
+            ) {
+              if (responseData["Open Positions"]) {
+                openPositions = responseData["Open Positions"][0];
+              } else if (responseData["Available Positions"]) {
+                openPositions = responseData["Available Positions"][0];
+              } else {
+                openPositions = responseData;
+              }
+            } else {
+              throw new Error("Unexpected response format");
+            }
+
             const keysWithTrueValues = [];
             const keysWithFalseValues = [];
+
             for (const [key, value] of Object.entries(openPositions)) {
               if (value === true || value === "true") {
                 keysWithTrueValues.push(key);
@@ -101,9 +117,19 @@ const ResumeUpload = () => {
               });
             }
           } catch (error) {
-            console.error(error + "error response");
+            console.error("Error during webhook processing:", error);
+
+            Swal.fire({
+              title: "Error Submitting Data",
+              text:
+                error?.response?.data?.message ||
+                "An unexpected error occurred.",
+              icon: "error",
+            });
+
             setFile("");
           }
+
           setLoading(false);
         }
         setLoading(false);
@@ -150,12 +176,12 @@ const ResumeUpload = () => {
           body: formData,
           headers: {
             user_Id: storedId,
-            "Authorization": sessionStorage.getItem("Authorization"),
-          // "x-xsrf-token": xsrfToken,
+            Authorization: sessionStorage.getItem("Authorization"),
+            // "x-xsrf-token": xsrfToken,
           },
           observe: "response",
           credentials: "include",
-             withCredentials: true,
+          withCredentials: true,
         }
       );
       if (backendResponse.ok) {

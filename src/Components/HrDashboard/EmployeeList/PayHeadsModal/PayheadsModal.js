@@ -9,17 +9,22 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
   const [availablePayheads, setAvailablePayheads] = useState([]);
   const [selectedPayheads, setSelectedPayheads] = useState([]);
   const [payheadAmounts, setPayheadAmounts] = useState({});
-  const apiUrl=process.env.REACT_APP_DB;
+  const [userdata, setUserdata] = useState([]);
+  const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const addPayhead = (payhead) => {
     setSelectedPayheads([...selectedPayheads, payhead]);
-    setAvailablePayheads(availablePayheads.filter((p) => p.payHeadId !== payhead.payHeadId));
+    setAvailablePayheads(
+      availablePayheads.filter((p) => p.payHeadId !== payhead.payHeadId)
+    );
   };
   const xsrfToken = getXsrfToken();
 
   const removePayhead = (payhead) => {
     setAvailablePayheads([...availablePayheads, payhead]);
-    setSelectedPayheads(selectedPayheads.filter((p) => p.payHeadId !== payhead.payHeadId));
+    setSelectedPayheads(
+      selectedPayheads.filter((p) => p.payHeadId !== payhead.payHeadId)
+    );
     const updatedAmounts = { ...payheadAmounts };
     delete updatedAmounts[payhead.payHeadId];
     setPayheadAmounts(updatedAmounts);
@@ -37,13 +42,13 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
     }));
 
     axios
-      .post(`${apiUrl}addPayHeadsToEmployee/employeeData/${empId}`, payload,{
+      .post(`${apiUrl}addPayHeadsToEmployee/employeeData/${empId}`, payload, {
         headers: {
-          "user_Id": localStorage.getItem("user_id"),
-          "Authorization": sessionStorage.getItem('Authorization'),
+          user_Id: localStorage.getItem("user_id"),
+          Authorization: sessionStorage.getItem("Authorization"),
           //"x-xsrf-token":xsrfToken
         },
-        withCredentials: true
+        withCredentials: true,
       })
       .then((response) => {
         Swal.fire({
@@ -51,8 +56,8 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
           text: "Payheads added successfully",
           icon: "success",
           confirmButtonText: "OK",
-        })
-        closeModal(); 
+        });
+        closeModal();
       })
       .catch((error) => {
         console.error("There was an error adding the pay heads!", error);
@@ -61,28 +66,27 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
           text: error.response?.data?.message,
           icon: "error",
           confirmButtonText: "OK",
-        })
+        });
       });
   };
 
+  
   useEffect(() => {
     const storedId = localStorage.getItem("user_id");
     axios
-      .get(`${apiUrl}users/payHeads/${storedId}`
-        ,{
-          headers: {
-            "Authorization": sessionStorage.getItem('Authorization')
-          },
-          withCredentials: true
-        }
-      )
+      .get(`${apiUrl}users/payHeads/${storedId}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("Authorization"),
+        },
+        withCredentials: true,
+      })
       .then((response) => {
         setAvailablePayheads(response.data?.reverse());
       })
       .catch((error) => {
         console.error("There was an error fetching the job details!", error);
       });
-  },[]); 
+  }, []);
 
   return (
     <Modal show={show} onHide={closeModal}>
@@ -132,7 +136,9 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
                     type="number"
                     placeholder="Enter amount"
                     value={payheadAmounts[payhead.payHeadId] || ""}
-                    onChange={(e) => handleAmountChange(payhead.payHeadId, e.target.value)}
+                    onChange={(e) =>
+                      handleAmountChange(payhead.payHeadId, e.target.value)
+                    }
                   />
                 </li>
               ))}
