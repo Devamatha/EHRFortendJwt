@@ -4,6 +4,7 @@ import { Modal, Button } from "react-bootstrap";
 import "./PayheadsModal.css";
 import Swal from "sweetalert2";
 import { getXsrfToken } from "../../../../App.js";
+import axiosInstance from "../../../../axiosInstance.js";
 
 const PayheadsModal = ({ show, closeModal, empId }) => {
   const [availablePayheads, setAvailablePayheads] = useState([]);
@@ -41,10 +42,10 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
       payHeadAmount: payheadAmounts[payhead.payHeadId] || 0,
     }));
 
-    axios
+    axiosInstance
       .post(`${apiUrl}addPayHeadsToEmployee/employeeData/${empId}`, payload, {
         headers: {
-          user_Id: localStorage.getItem("user_id"),
+          user_Id: sessionStorage.getItem("user_id"),
           Authorization: sessionStorage.getItem("Authorization"),
           //"x-xsrf-token":xsrfToken
         },
@@ -72,7 +73,7 @@ const PayheadsModal = ({ show, closeModal, empId }) => {
 
   
   useEffect(() => {
-    const storedId = localStorage.getItem("user_id");
+    const storedId = sessionStorage.getItem("user_id");
     axios
       .get(`${apiUrl}users/payHeads/${storedId}`, {
         headers: {

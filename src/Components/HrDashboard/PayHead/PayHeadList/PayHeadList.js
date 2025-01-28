@@ -6,7 +6,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getXsrfToken } from "../../../../App.js";
+import axiosInstance from "./../../../../axiosInstance";
 
 // import "./PayHeadList.css"
 function PayHeadList() {
@@ -14,13 +14,12 @@ function PayHeadList() {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [jobDetails, setJobDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
 
-  const xsrfToken = getXsrfToken();
 
   useEffect(() => {
     payHeadList(storedId);
@@ -29,7 +28,7 @@ function PayHeadList() {
   const payHeadList = async (storedId) => {
     setisLoading(true);
 
-    axios
+    axiosInstance
       .get(`${apiUrl}users/payHeads/${storedId}`, {
         headers: {
           Authorization: sessionStorage.getItem("Authorization"),
@@ -75,7 +74,7 @@ function PayHeadList() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Proceed with the deletion if confirmed
-        axios
+        axiosInstance
           .delete(`${apiUrl}payHeads/delete/${jobId}`, {
             headers: {
               user_Id: storedId,

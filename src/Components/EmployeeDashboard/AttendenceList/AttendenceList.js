@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 // import "./AttendenceList.css";
+import axiosInstance from "./../../../axiosInstance.js";
+
 const AttendenceList = () => {
   const [attendances, setAttendances] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const empId=localStorage.getItem("empId");
+  const empId=sessionStorage.getItem("empId");
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   useEffect(() => {
     setisLoading(true);
 
-    axios
+    axiosInstance
       .get(`${apiUrl}employees/attedence/${empId}`,
         {
           headers: {

@@ -3,9 +3,10 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 function AddEmployee() {
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   //const [file, setFile] = useState(null);
   const [fullName, setfullName] = useState("");
   const [dob, setDate] = useState("");
@@ -71,11 +72,10 @@ function AddEmployee() {
       fullName,
     };
     try {
-      // Step 1  Upload Resume
-      const backendResponse = await axios.post(
+      const backendResponse = await axiosInstance.post(
         `${apiUrl}clients/save/Employee/${storedId}`,
 
-        JSON.stringify(data),
+        data,
         {
           headers: {
             "Content-Type": "application/json",

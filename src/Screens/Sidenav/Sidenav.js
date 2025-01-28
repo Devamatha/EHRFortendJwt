@@ -10,12 +10,12 @@ function Sidenav() {
     event.preventDefault();
 
     try {
-      localStorage.clear();
+      sessionStorage.clear();
       sessionStorage.clear();
      
     } catch {
     } finally {
-      navigate("/login", { replace: true });
+      navigate("/Login", { replace: true });
     }
   };
 

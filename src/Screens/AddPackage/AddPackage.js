@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 // import './AddPackage.css';
 import { getXsrfToken } from "../../App.js";
+import axiosInstance from "./../../axiosInstance.js";
 
 const AddPackage = () => {
   const [planType, setPlanType] = useState("Monthly"); // Default value
@@ -12,7 +13,7 @@ const AddPackage = () => {
   const [discription, setDescription] = useState("");
   const [additionalFeatures, setAdditionalFeatures] = useState("");
   const [totalResumes, settotalResumes] = useState(0);
-  const adminId = localStorage.getItem("admin_Id");
+  const adminId = sessionStorage.getItem("admin_Id");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const xsrfToken = getXsrfToken();
@@ -37,7 +38,7 @@ const AddPackage = () => {
     };
   
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${apiUrl}plan/save/${adminId}`,
         newPlan,
         
@@ -71,17 +72,13 @@ const AddPackage = () => {
         setAdditionalFeatures("");
       });
     } catch (error) {
-      console.error(
-        "There was an error creating the subscription plan!",
-        error
-      );
+      
 
       // Show error alert
       Swal.fire({
         title: "Error!",
-        text: "There was an error creating the subscription plan.",
+        text: error.response?.data?.message,
         icon: "error",
-        confirmButtonText: "OK",
       });
     }
   };

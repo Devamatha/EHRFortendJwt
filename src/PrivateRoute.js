@@ -1,27 +1,40 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-const PrivateRoute = ({ element: Component,requiredRole , ...rest }) => {
-  const fullName = localStorage.getItem('fullName'); 
-const role = localStorage.getItem('role');
-if(!fullName && !role){
-    return <Navigate to="/login" />
-}
+const PrivateRoute = ({ element: Component, requiredRole, ...rest }) => {
+  const fullName = sessionStorage.getItem("fullName");
+  const role = sessionStorage.getItem("role");
+  const jwt = sessionStorage.getItem("Authorization");
 
-
-if (requiredRole && role !== requiredRole) {
-    switch (role) {
-      case 'admin':
-        return <Navigate to="/AdminDashboard" />;
-      case 'employee':
-        return <Navigate to="/EmployeeDashboard" />;
-      case 'USER':
-        return <Navigate to="/hrdashboard" />;
-      default:
-        return <Navigate to="/login" />;
+  const isTokenValid = () => {
+    if (jwt) {
+      try {
+        const decodedToken = jwtDecode(jwt);
+        const currentTime = Date.now() / 1000;
+        return decodedToken.exp > currentTime;
+      } catch (error) {
+        console.error("Invalid token:", error);
+        return false;
+      }
     }
+    return false;
+  };
+  if (!fullName && !role && !jwt) {
+    sessionStorage.clear();
+    localStorage.clear();
+    return <Navigate to="/Login" />;
   }
- // return fullName ? <Component {...rest} /> : <Navigate to="/login" />;
+  if (!jwt || !isTokenValid()) {
+    sessionStorage.clear();
+    localStorage.clear();
+    return <Navigate to="/Login" />;
+  }
+  if (!requiredRole && role !== requiredRole && !jwt) {
+    sessionStorage.clear();
+    localStorage.clear();
+    return <Navigate to="/Login" />;
+  }
 
   return <Component {...rest} />;
 };

@@ -4,8 +4,8 @@ import React from "react";
 function Header() {
  
 
-  const UserName = localStorage.getItem("fullName");
-  const empId = localStorage.getItem("empId")
+  const UserName = sessionStorage.getItem("fullName");
+  const empId = sessionStorage.getItem("empId")
 
   return (
     <div style={{ position:'sticky',zIndex:"9", top:"0"}} className="header-containerr totalPage">

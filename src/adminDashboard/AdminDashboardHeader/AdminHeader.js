@@ -1,7 +1,7 @@
 import React from "react";
 import './AdminHeader.css'
 function AdminHeader() {
-  const UserName = localStorage.getItem("fullName");
+  const UserName = sessionStorage.getItem("fullName");
 
   return (
     <div style={{ position:'sticky',zIndex:"9", top:"0"}} className="header-containerr totalPage">

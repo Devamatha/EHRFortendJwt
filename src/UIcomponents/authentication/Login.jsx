@@ -6,12 +6,11 @@ import Swal from "sweetalert2";
 import "./../../index.css";
 import Header from "../../UIcomponents/header/Header";
 import Footer from "../footer/Footer";
-import Cookies from 'js-cookie';
 
 function Login() {
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_DB;
-  const environment = process.env.REACT_APP_NODE_ENV;
+  //const environment = process.env.REACT_APP_NODE_ENV;
   const [username, setUername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -82,22 +81,22 @@ function Login() {
           });
           if (data.role === "ROLE_ADMIN") {
             // console.log("admindash");
-            localStorage.setItem("admin_Id", data.id);
-            localStorage.setItem("fullName", data.fullName);
-            localStorage.setItem("role", data.role);
+            sessionStorage.setItem("admin_Id", data.id);
+            sessionStorage.setItem("fullName", data.fullName);
+            sessionStorage.setItem("role", data.role);
             navigate("/AdminDashboard");
           } else if (data.role === "ROLE_EMPLOYEE") {
-            localStorage.setItem("empId", data.id);
-            localStorage.setItem("fullName", data.fullName);
-            localStorage.setItem("role", data.role);
+            sessionStorage.setItem("empId", data.id);
+            sessionStorage.setItem("fullName", data.fullName);
+            sessionStorage.setItem("role", data.role);
 
             navigate("/EmployeeDashboard");
 
             // console.log("employee");
           } else if (data.role === "ROLE_HR") {
-            localStorage.setItem("user_id", data.id);
-            localStorage.setItem("fullName", data.fullName);
-            localStorage.setItem("role", data.role);
+            sessionStorage.setItem("user_id", data.id);
+            sessionStorage.setItem("fullName", data.fullName);
+            sessionStorage.setItem("role", data.role);
 
             navigate("/hrdashboard");
           } else {
@@ -170,7 +169,7 @@ function Login() {
                     <img
                       src={CONTACT}
                       alt="contact-img"
-                      className="md:h-[20px] h-[13px] md:w-[24px] h-[13px]"
+                      className="md:h-[20px] md:w-[24px] h-[13px]"
                     />
                   </div>
                 </div>
@@ -197,9 +196,9 @@ function Login() {
                     onClick={togglePasswordVisibility}
                   >
                     {passwordVisible ? (
-                      <FaEyeSlash className="md:h-[24px] h-[20px] md:w-[24px] h-[20px]" />
+                      <FaEyeSlash className="md:h-[24px] md:w-[24px] h-[20px]" />
                     ) : (
-                      <FaEye className="md:h-[24px] h-[20px] md:w-[24px] h-[20px]" />
+                      <FaEye className="md:h-[24px] md:w-[24px] h-[20px]" />
                     )}
                   </div>
                 </div>

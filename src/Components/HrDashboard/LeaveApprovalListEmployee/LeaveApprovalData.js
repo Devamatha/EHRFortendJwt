@@ -6,9 +6,11 @@ import {
   faCheckCircle,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import axiosInstance from "./../../../axiosInstance.js";
+
 function LeaveApprovalData() {
   const [leaveDetails, setLeaveDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const apiUrl = process.env.REACT_APP_DB;
@@ -20,19 +22,15 @@ function LeaveApprovalData() {
   }, [storedId]);
 
   const leaveApprovalData = async (storedId) => {
-    const response = await axios
-      .get(`${apiUrl}users/leave-approvals/${storedId}`,
-        {
-          headers: {
-            "Authorization": sessionStorage.getItem('Authorization')
-          
-          },
-          observe: 'response',
-          credentials: 'include',
-             withCredentials: true,
-        }
-
-      )
+    const response = await axiosInstance
+      .get(`${apiUrl}users/leave-approvals/${storedId}`, {
+        headers: {
+          Authorization: sessionStorage.getItem("Authorization"),
+        },
+        observe: "response",
+        credentials: "include",
+        withCredentials: true,
+      })
       .then((response) => {
         const allLeaveApprovals = response.data.reverse();
         setLeaveDetails(allLeaveApprovals);
@@ -51,35 +49,30 @@ function LeaveApprovalData() {
   const updateStatus = (newStatus, id) => {
     const formData = new FormData();
     formData.append("status", newStatus);
-    axios
+    axiosInstance
       .put(`${apiUrl}leaveApproval/status/${id}`, formData, {
         headers: {
           user_Id: storedId,
           Authorization: sessionStorage.getItem("Authorization"),
-         // x_xsrf_token: sessionStorage.getItem("XSRF-TOKEN"),
         },
         observe: "response",
         credentials: "include",
-           withCredentials: true,
+        withCredentials: true,
       })
       .then((response) => {
-        //alert(`Status updated to ${newStatus}`);
         Swal.fire({
           title: "Success!",
           text: `Status updated to ${newStatus}`,
           icon: "success",
         });
-        // console.log(response, "response");
       })
       .catch((error) => {
         console.error("There was an error updating the status!", error);
-        // alert("Could not update status. The start date might be in the past.");
         Swal.fire({
           title: error.response?.data?.error,
-              text: error.response?.data?.message,
-              icon: 'error',
-              confirmButtonText: 'OK'
-        })
+          text: error.response?.data?.message,
+          icon: "error",
+        });
       });
   };
 

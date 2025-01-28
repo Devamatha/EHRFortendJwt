@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 const LeaveApprovalList = () => {
   const [leaveApprovals, setLeaveApprovals] = useState([]);
@@ -11,7 +12,7 @@ const LeaveApprovalList = () => {
   const [itemsPerPage] = useState(5);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const empId = localStorage.getItem("empId");
+  const empId = sessionStorage.getItem("empId");
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const xsrfToken = getXsrfToken();
@@ -24,7 +25,7 @@ const LeaveApprovalList = () => {
     setisLoading(true);
 
     try {
-      const response = await axios.get(` ${apiUrl}employees/leave/${empId}`, {
+      const response = await axiosInstance.get(` ${apiUrl}employees/leave/${empId}`, {
         headers: {
           Authorization: sessionStorage.getItem("Authorization"),
         // "x-xsrf-token": xsrfToken,
@@ -36,12 +37,12 @@ const LeaveApprovalList = () => {
       setisLoading(false);
     } catch (error) {
       setError("Error fetching leave approvals");
-      console.error("There was an error fetching the leave approvals:", error);
+      //console.error("There was an error fetching the leave approvals:", error);
+      //setisLoading(false);
+    }
+     finally {
       setisLoading(false);
     }
-    //  finally {
-    //   setLoading(false);
-    // }
   };
   // if (loading) {
   //   return <p>Loading...</p>;

@@ -5,21 +5,19 @@ import { useEffect } from "react";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
-import { getXsrfToken } from "../../App.js";
-
 import { useNavigate } from "react-router-dom";
+import axiosInstance from "./../../axiosInstance";
 
 function TableData() {
   const navigate = useNavigate();
   const [jobDetails, setJobDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [Isloading, SetIsLoading] = useState(false);
   const [hasNoData, setHasNoData] = useState(false);
-  const xsrfToken = getXsrfToken();
 
   useEffect(() => {
     getAllJobDetails(storedId);
@@ -28,7 +26,7 @@ function TableData() {
   const getAllJobDetails = async (storedId) => {
     SetIsLoading(true);
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         `${apiUrl}users/add-job-details/${storedId}`,
      {
       headers: {
@@ -74,7 +72,7 @@ function TableData() {
       cancelButtonText: "No, cancel!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
+        axiosInstance
           .delete(`${apiUrl}JobDetails/delete/${jobId}`, {
             headers: {
               "Content-Type": "application/json",

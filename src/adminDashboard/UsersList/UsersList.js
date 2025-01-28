@@ -1,17 +1,20 @@
 import axios from "axios";
 import React from "react";
 import { useState, useEffect } from "react";
+import axiosInstance from "./../../axiosInstance";
+
 function UsersList() {
   const [allUsers, setAllUsers] = useState([]);
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [hasNoData, setHasNoData] = useState(false);
   const [isLoading, setisLoading] = useState(false);
+
   useEffect(() => {
     // Fetch data from the API endpoint
     setisLoading(true);
 
-    axios
+    axiosInstance
       .get(`${apiUrl}users/allUsers`,{
         headers: {
           "Authorization": sessionStorage.getItem('Authorization'),

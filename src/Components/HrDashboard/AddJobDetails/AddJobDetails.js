@@ -1,20 +1,18 @@
 import React from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { useNavigate} from "react-router-dom";
-import { getXsrfToken } from "../../../App.js";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "./../../../axiosInstance.js";
 
 function AddJobDetails() {
   const [jobTitle, setjobTitle] = useState("");
-  //const [jobkeyskills, setjobkeyskills] = useState([]);
   const [yearsOfExperience, setyearsOfExperience] = useState("");
   const [noOfVacancies, setnoOfVacancies] = useState("");
   const [overallPercentage, setoverallPercentage] = useState("");
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const navigate = useNavigate();
-  const xsrfToken = getXsrfToken();
 
   const [loading, setLoading] = useState(false);
   const handleAddJob = async (e) => {
@@ -24,48 +22,36 @@ function AddJobDetails() {
     const percentageWithSymbol = `${overallPercentage}`;
 
     try {
-      const response = await fetch(`${apiUrl}JobDetails/addJob/${storedId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "user_Id": storedId,
-          "Authorization": sessionStorage.getItem('Authorization'),
-          //"x-xsrf-token":xsrfToken
-        },
-        observe: 'response',
-        credentials: 'include',
-        withCredentials: true,
-
-        body: JSON.stringify({
+      const response = await axiosInstance.post(
+        `${apiUrl}JobDetails/addJob/${storedId}`,
+        {
           jobTitle,
-          //jobkeyskills: jobkeyskills,
           yearsOfExperience,
           noOfVacancies,
           overallPercentage: percentageWithSymbol,
-        }),
-      });
-
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            user_Id: storedId,
+            Authorization: sessionStorage.getItem("Authorization"),
+          },
+          observe: "response",
+          credentials: "include",
+          withCredentials: true,
+        }
+      );
       setLoading(false);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        Swal.fire({
-          icon: "error",
-          title: errorData.error,
-          text: errorData.message || "An unknown error occurred.",
-        });
-      } else {
-        const data = await response.json();
-        Swal.fire({
-          icon: "success",
-          title: "Job Added Successfully",
-          text: "The job has been successfully added!",
-        }).then(()=>{
-          navigate('/hrdashboard/listJobDetails');
-        });
-      }
+      Swal.fire({
+        icon: "success",
+        title: "Job Added Successfully",
+        text: "The job has been successfully added!",
+      }).then(() => {
+        navigate("/hrdashboard/listJobDetails");
+      });
+
       setjobTitle("");
-      //setjobkeyskills([]);
       setyearsOfExperience("");
       setnoOfVacancies("");
       setoverallPercentage("");
@@ -73,21 +59,16 @@ function AddJobDetails() {
       setLoading(false);
       Swal.fire({
         title: error.error,
-        text: error.message,
-        icon: "error"
+        text: error.response?.data?.message,
+        icon: "error",
       });
       console.error("Job addition error:", error);
       setjobTitle("");
-      //setjobkeyskills([]);
       setyearsOfExperience("");
       setnoOfVacancies("");
       setoverallPercentage("");
     }
   };
-
-  // const handleAddSkill = (skill) => {
-  //   setjobkeyskills([...jobkeyskills, skill]);
-  // };
 
   return (
     <div className="">

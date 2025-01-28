@@ -52,58 +52,56 @@ const MainRoute = () => {
         <Route path="/Login" element={<Login />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
         <Route path="/Signup" element={<SignUp />} />
-        <Route path="/" element={<HomePage />} />
+        <Route index element={<HomePage />} />
         <Route path="/About" element={<Aboutus />} />
         <Route path="/Pricing" element={<Pricing />} />
         <Route path="/Contactus" element={<Contactus />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/login" element={<LoginPage />} /> */}
         <Route path="/Sidenav" element={<Header />} />
-        
-        <Route path="/hrdashboard" element={<PrivateRoute element={HrDashboard} requiredRole="ROLE_HR" />} >
-          <Route path="/hrdashboard/addJobDetails" element={<AddJobDetails />} />
-          <Route path="/hrdashboard/EditEmployee/:id" element={<EditEmployee />} />
-          <Route path="/hrdashboard/AddHoliday" element={<AddHoliday />} />
-          <Route path="/hrdashboard/listJobDetails" element={<TableData />} />
-          <Route path="/hrdashboard/HolidayTableData" element={<HolidayTableData />} />
-          <Route path="/hrdashboard/editHoliday/:jobId" element={<HoliDayTableDataEdit />} />
-          <Route path="/hrdashboard/editPayHead/:payId" element={<PayHeadEdit />} />
-          <Route path="/hrdashboard/resumeUpload" element={<ResumeUpload />} />
-          <Route path="/hrdashboard/AttedenceEmployee" element={<AttedenceEmployee />} />
-          <Route path="/hrdashboard/LeaveApproval" element={<LeaveApprovalData />} />
-          <Route path="/hrdashboard/editJobDetails/:jobId" element={<EditJobDetails />} />
-          <Route path="/hrdashboard/AddPayHead" element={<AddPayHead />} />
-          <Route path="/hrdashboard/PayHeadList" element={<PayHeadList />} />
-          <Route path="/hrdashboard/AddEmployee" element={<AddEmployee />} />
-          <Route path="/hrdashboard/EmployeeList" element={<EmployeeList />} />
-          <Route path="/hrdashboard/SendNotification" element={<SendNotification />} />
-          <Route path="/hrdashboard/PersonalInformationTable" element={<PersonalInformationTable />} />
-          <Route path="/hrdashboard/payslip/:empid" element={<EmployeeDetails />} />
-          <Route path="/hrdashboard/example" element={<Example />} />
-
-          <Route path="/hrdashboard/UpgradePlan" element={<UpgradePlan />} />
-        </Route>
-        
-        <Route path="/AdminDashboard" element={<PrivateRoute element={AdminDashboard} requiredRole="ROLE_ADMIN" />}>
-          <Route path="/AdminDashboard/usersList" element={<UsersList />} />
-          <Route path="/AdminDashboard/Home" element={<Home />} />
-          <Route path="/AdminDashboard/addPackage" element={<AddPackage />} />
-          <Route path="/AdminDashboard/PricingContainer" element={<PricingContainer />} /> 
-
-          <Route path="/AdminDashboard/Signup" element={<SignUp />} />
-
-                 </Route>
-        
         <Route path="/interviewlogin" element={<InterviewLogin />} />
         <Route path="/ViewNotification/:empid" element={<ViewNotification />} />
         <Route path="/exam/:emailid" element={<Exam />} />
 
+        
+        <Route path="/hrdashboard" element={<PrivateRoute element={HrDashboard} requiredRole="ROLE_HR" />} >
+          <Route path="/hrdashboard/addJobDetails"  element={<PrivateRoute element={AddJobDetails} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/EditEmployee/:id"  element={<PrivateRoute element={EditEmployee} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/AddHoliday"  element={<PrivateRoute element={AddHoliday} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/listJobDetails"  element={<PrivateRoute element={TableData} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/HolidayTableData"     element={<PrivateRoute element={HolidayTableData} requiredRole="ROLE_HR" />}/>
+          <Route path="/hrdashboard/editHoliday/:jobId"  element={<PrivateRoute element={HoliDayTableDataEdit} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/editPayHead/:payId"  element={<PrivateRoute element={PayHeadEdit} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/resumeUpload"  element={<PrivateRoute element={ResumeUpload} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/AttedenceEmployee"  element={<PrivateRoute element={AttedenceEmployee} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/LeaveApproval" element={<PrivateRoute element={LeaveApprovalData} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/editJobDetails/:jobId"  element={<PrivateRoute element={EditJobDetails} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/AddPayHead"  element={<PrivateRoute element={AddPayHead} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/PayHeadList"  element={<PrivateRoute element={PayHeadList} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/AddEmployee"  element={<PrivateRoute element={AddEmployee} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/EmployeeList"  element={<PrivateRoute element={EmployeeList} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/SendNotification"  element={<PrivateRoute element={SendNotification} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/PersonalInformationTable"  element={<PrivateRoute element={PersonalInformationTable} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/payslip/:empid"  element={<PrivateRoute element={EmployeeDetails} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/example"  element={<PrivateRoute element={Example} requiredRole="ROLE_HR" />} />
+          <Route path="/hrdashboard/UpgradePlan"  element={<PrivateRoute element={UpgradePlan} requiredRole="ROLE_HR" />} />
+        </Route>
+        
+        <Route path="/AdminDashboard" element={<PrivateRoute element={AdminDashboard} requiredRole="ROLE_ADMIN" />}>
+          <Route path="/AdminDashboard/usersList"  element={<PrivateRoute element={UsersList} requiredRole="ROLE_ADMIN" />} />
+          <Route path="/AdminDashboard/Home"  element={<PrivateRoute element={Home} requiredRole="ROLE_ADMIN" />} />
+          <Route path="/AdminDashboard/addPackage"  element={<PrivateRoute element={AddPackage} requiredRole="ROLE_ADMIN" />} />
+          <Route path="/AdminDashboard/PricingContainer"  element={<PrivateRoute element={PricingContainer} requiredRole="ROLE_ADMIN" />} /> 
+          <Route path="/AdminDashboard/Signup"  element={<PrivateRoute element={SignUp} requiredRole="ROLE_ADMIN" />} />
+        </Route>
+        
+      
         <Route path="/EmployeeDashboard" element={<PrivateRoute element={EmployeeDashboard} requiredRole="ROLE_EMPLOYEE" />}>
-          <Route path="/EmployeeDashboard/createAttendence" element={<AttendanceForm />} />
-          <Route path="/EmployeeDashboard/attendances" element={<AttendenceList />} />
-          <Route path="/EmployeeDashboard/LeaveApprovalForm" element={<LeaveApproval />} />
-          <Route path="/EmployeeDashboard/LeaveApprovalList" element={<LeaveApprovalList />} />
-          <Route path="/EmployeeDashboard/ViewNotification/:empid" element={<ViewNotification />} />
+          <Route path="/EmployeeDashboard/createAttendence"  element={<PrivateRoute element={AttendanceForm} requiredRole="ROLE_EMPLOYEE" />} />
+          <Route path="/EmployeeDashboard/attendances" element={<PrivateRoute element={AttendenceList} requiredRole="ROLE_EMPLOYEE" />} />
+          <Route path="/EmployeeDashboard/LeaveApprovalForm"  element={<PrivateRoute element={LeaveApproval} requiredRole="ROLE_EMPLOYEE" />} />
+          <Route path="/EmployeeDashboard/LeaveApprovalList"  element={<PrivateRoute element={LeaveApprovalList} requiredRole="ROLE_EMPLOYEE" />} />
+          <Route path="/EmployeeDashboard/ViewNotification/:empid"  element={<PrivateRoute element={ViewNotification} requiredRole="ROLE_EMPLOYEE" />} />
         </Route>
       </Routes>
     </div>
@@ -111,3 +109,4 @@ const MainRoute = () => {
 };
 
 export default MainRoute;
+

@@ -4,17 +4,17 @@ import "./EmployeeSidenav.css";
 //import "../../../Screens/Sidenav/Sidenav.css"
 function EmployeeSidenav() {
   const navigate = useNavigate();
-  const empId = localStorage.getItem("empId");
+  const empId = sessionStorage.getItem("empId");
 
   const logout = (event) => {
     event.preventDefault();
 
     try {
-      localStorage.clear();
+      sessionStorage.clear();
       sessionStorage.clear();
     } catch {
     } finally {
-      navigate("/login", { replace: true });
+      navigate("/Login", { replace: true });
     }
   };
 

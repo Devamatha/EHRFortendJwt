@@ -4,11 +4,13 @@ import axios from "axios";
 import TICK from "../../assets/images/mdi_tick.png";
 import BASIC from "../../assets/images/basic.png";
 import Swal from "sweetalert2";
+import axiosInstance from "./../../axiosInstance";
+
 function UpgradePlan() {
   const [plans, setPlans] = useState([]);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const userId = localStorage.getItem("user_id");
+  const userId = sessionStorage.getItem("user_id");
   const getSubscriptionPlans = () => {
     axios
       .get(`${apiUrl}plan/getAll`)
@@ -121,7 +123,7 @@ function UpgradePlan() {
 
   const subScriptionadd = async (payDetails) => {
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         ` ${apiUrl}subscriptions/upgrade/${userId}`,
         payDetails,
         {
@@ -140,8 +142,8 @@ function UpgradePlan() {
     } catch (error) {
       console.error("Error:", error);
       Swal.fire({
-        title: error.error,
-        text: error.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
         icon: "error",
       });
     }

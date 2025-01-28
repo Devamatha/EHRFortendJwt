@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import{getXsrfToken} from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
+
 const AttendanceForm = () => {
-  const empId = localStorage.getItem("empId");
+  const empId = sessionStorage.getItem("empId");
 
   const [date, setDate] = useState("");
   const [punchOutMessage, setPunchOutMessage] = useState("");
@@ -23,7 +25,7 @@ const xsrfToken = getXsrfToken();
 
     const fetchAttendance = async () => {
       try {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           `${apiUrl}attendance/employee/attendance/${empId}/${currentDate}`,
           {
             headers:{
@@ -65,44 +67,33 @@ const xsrfToken = getXsrfToken();
     formData.append("punchInMessage", punchInMessage);
     formData.append("punchIn", punchIn);
     try {
-      const response = await fetch(`${apiUrl}attendance/employee/${empId}`, {
-        method: "POST",
+      const response = await axiosInstance.post(`${apiUrl}attendance/employee/${empId}`, formData,{
+      
         headers: {
           
           "Id": empId,
           "Authorization": sessionStorage.getItem('Authorization'),
          // "x-xsrf-token": xsrfToken
         },
-      body:  formData,
+      
         withCredentials: true
       });
       setLoading(false);
-      if (response.ok) {
         Swal.fire({
           title: "Punch In added successfully",
           text: "Punch In added successfully",
           icon: "success",
         });
-      }else {
-        const errorData = await response.json();
-        Swal.fire({
-          title: errorData.error,
-          text: errorData.message,
-          icon: "error",
-        })
-      }
-      
     
       setPunchInMessage("");
       setPunchIn("");
       setDate("");
-      // console.log("Response:", await response.json());
     } catch (error) {
       setLoading(false);
       console.error("Error submitting attendance", error);
       Swal.fire({
-        title: error.error,
-        text: error.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
         icon: "error",
       });
       setPunchInMessage("");
@@ -127,47 +118,33 @@ const xsrfToken = getXsrfToken();
       formData.append("punchOutMessage",punchOutMessage);
       formData.append("date",attendanceData.date);
       formData.append("name",attendanceData.name);
-      const response = await fetch(`${apiUrl}attendance/update/${attendanceData.id}`, {
-        method: "PUT",
+      const response = await axiosInstance.put(`${apiUrl}attendance/update/${attendanceData.id}`,formData, {
+      
         headers: {
           //"Content-Type": "application/json",
           "Id": empId,
           "Authorization": sessionStorage.getItem('Authorization'),
          // "x-xsrf-token": xsrfToken
         },
-        body: formData,
         withCredentials: true
       });
       setLoading(false);
       setPunchOut("");
       setPunchOutMessage("");
-      if(response.ok){
         Swal.fire({
           title: "Punch Out added successfully",
           text: "Punch Out added successfully",
           icon: "success",
         });
-      }else{
-        const errorData = await response.json();
-        Swal.fire({
-          title: errorData.error,
-          text: errorData.message,
-          icon: "error",
-        })
-      }
-     
-
-      // console.log("Response:", await response.json());
-    } catch (error) {
+      
+         } catch (error) {
       setLoading(false);
-    //  console.error("Error updating attendance", error);
 
       Swal.fire({
-        title: error.respose?.data?.message,
+        title: error.respose?.data?.error,
         text: error.response?.data?.message,
         icon: "warning",
       });
-      console.error("Error updating attendance", error);
       setPunchOut("");
       setPunchOutMessage("");
       setDate("");

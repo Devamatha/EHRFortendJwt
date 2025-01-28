@@ -3,13 +3,14 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import { getXsrfToken } from "../../App.js";
+import axiosInstance from "./../../axiosInstance.js";
 
 const ResumeUpload = () => {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const xsrfToken = getXsrfToken();
 
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [formVisible, setFormVisible] = useState(false);
 
   const [file, setFile] = useState(null);
@@ -19,6 +20,7 @@ const ResumeUpload = () => {
   const [trueKeys, setTrueKeys] = useState([]);
   const [loading, setLoading] = useState(false);
   const [resumeText, setresumeText] = useState(false);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -26,134 +28,118 @@ const ResumeUpload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     const formData = new FormData();
     formData.append("file", file);
 
     try {
-      // Step 1: Upload Resume
-      const backendResponse = await fetch(
+      const backendResponse = await axiosInstance.post(
         `${apiUrl}candidates/upload-resume/${storedId}`,
+        formData,
         {
-          method: "POST",
-          body: formData,
           headers: {
             user_Id: storedId,
             Authorization: sessionStorage.getItem("Authorization"),
-            // "x-xsrf-token": xsrfToken,
           },
-          observe: "response",
-          credentials: "include",
           withCredentials: true,
         }
       );
 
-      if (backendResponse.ok) {
-        const errorData = await backendResponse.json();
-        console.log(errorData.jobRole);
+      const errorData = backendResponse.data;
 
-        if (
-          errorData.jobRole != null &&
-          errorData.resumeTextData != null &&
-          errorData != null
-        ) {
-          try {
-            const webhookFormData = new FormData();
-            webhookFormData.append("jobRole", errorData.jobRole);
-            webhookFormData.append("resumeTextData", errorData.resumeTextData);
+      if (
+        errorData.jobRole != null &&
+        errorData.resumeTextData != null &&
+        errorData != null
+      ) {
+        try {
+          const webhookResponse = await axios.post(
+            "https://hook.eu2.make.com/6srs49d44nt3qxfkw9jwo4kq2c8h89q9",
+            {
+              jobRole: errorData.jobRole,
+              resumeTextData: errorData.resumeTextData,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-            const webhookResponse = await axios.post(
-              "https://hook.eu2.make.com/6srs49d44nt3qxfkw9jwo4kq2c8h89q9",
-              webhookFormData,
-              {
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
-            );
+          const responseData = webhookResponse.data;
 
-            const responseData = webhookResponse.data;
+          let openPositions = {};
 
-            console.log(responseData, "webhookResponse.data");
-
-            let openPositions = {};
-
-            if (
-              typeof responseData === "object" &&
-              !Array.isArray(responseData)
-            ) {
-              if (responseData["Open Positions"]) {
-                openPositions = responseData["Open Positions"][0];
-              } else if (responseData["Available Positions"]) {
-                openPositions = responseData["Available Positions"][0];
-              } else {
-                openPositions = responseData;
-              }
+          if (
+            typeof responseData === "object" &&
+            !Array.isArray(responseData)
+          ) {
+            if (responseData["Open Positions"]) {
+              openPositions = responseData["Open Positions"][0];
+            } else if (responseData["Available Positions"]) {
+              openPositions = responseData["Available Positions"][0];
             } else {
-              throw new Error("Unexpected response format");
+              openPositions = responseData;
             }
-
-            const keysWithTrueValues = [];
-            const keysWithFalseValues = [];
-
-            for (const [key, value] of Object.entries(openPositions)) {
-              if (value === true || value === "true") {
-                keysWithTrueValues.push(key);
-              } else {
-                keysWithFalseValues.push(key);
-              }
-            }
-
-            if (keysWithTrueValues.length > 0) {
-              setTrueKeys(keysWithTrueValues);
-              setFormVisible(true);
-            } else {
-              setFormVisible(false);
-              Swal.fire({
-                title:
-                  "Resume is not matched with job roles: " +
-                  keysWithFalseValues.join(", "),
-                text: "Try with another resume",
-                icon: "info",
-              });
-            }
-          } catch (error) {
-            console.error("Error during webhook processing:", error);
-
-            Swal.fire({
-              title: "Error Submitting Data",
-              text:
-                error?.response?.data?.message ||
-                "An unexpected error occurred.",
-              icon: "error",
-            });
-
-            setFile("");
+          } else {
+            throw new Error("Unexpected response format");
           }
 
-          setLoading(false);
+          const keysWithTrueValues = [];
+          const keysWithFalseValues = [];
+
+          for (const [key, value] of Object.entries(openPositions)) {
+            if (value === true || value === "true") {
+              keysWithTrueValues.push(key);
+            } else {
+              keysWithFalseValues.push(key);
+            }
+          }
+
+          if (keysWithTrueValues.length > 0) {
+            setTrueKeys(keysWithTrueValues);
+            setFormVisible(true);
+          } else {
+            setFormVisible(false);
+            Swal.fire({
+              title:
+                "Resume is not matched with job roles: " +
+                keysWithFalseValues.join(", "),
+              text: "Try with another resume",
+              icon: "info",
+            });
+          }
+        } catch (error) {
+          console.error("Error during webhook processing:", error);
+
+          Swal.fire({
+            title: "Error Submitting Data",
+            text:
+              error?.response?.data?.message || "An unexpected error occurred.",
+            icon: "error",
+          });
+
+          setFile("");
         }
-        setLoading(false);
       } else {
-        const errorData = await backendResponse.json();
         Swal.fire({
           icon: "error",
           title: errorData.error,
           text: errorData.message,
         });
       }
-
-      setLoading(false);
     } catch (error) {
-      console.log("hlooo");
-      setLoading(false);
+      console.error("Error uploading resume:", error);
 
-      setFile("");
       Swal.fire({
         icon: "warning",
-        title: error.error,
-        text: error.message,
+        title: "Error",
+        text: error?.response?.data?.message || "An unexpected error occurred.",
       });
-      //setWebhookMessage('');
+
+      setFile("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -168,12 +154,11 @@ const ResumeUpload = () => {
 
     try {
       // Step 1: Upload Resume
-      const backendResponse = await fetch(
+      const backendResponse = await axiosInstance.put(
         `${apiUrl}candidates/update-Details/${storedId}`,
+        formData,
 
         {
-          method: "PUT",
-          body: formData,
           headers: {
             user_Id: storedId,
             Authorization: sessionStorage.getItem("Authorization"),
@@ -184,20 +169,12 @@ const ResumeUpload = () => {
           withCredentials: true,
         }
       );
-      if (backendResponse.ok) {
-        Swal.fire({
-          icon: "success",
-          title: "Send the exam details to Candidate",
-          text: "Send the exam details to Candidate",
-        });
-      } else {
-        const errorData = await backendResponse.json();
-        Swal.fire({
-          icon: "error",
-          title: errorData.error,
-          text: errorData.message,
-        });
-      }
+
+      Swal.fire({
+        icon: "success",
+        title: "Send the exam details to Candidate",
+        text: "Send the exam details to Candidate",
+      });
 
       setFormVisible(false);
       setresumeText(false);
@@ -213,8 +190,8 @@ const ResumeUpload = () => {
 
       Swal.fire({
         icon: "error",
-        title: error.error,
-        text: error.message,
+        title: error.response?.data?.status,
+        text: error.response?.data?.message,
       });
       // setWebhookMessage('');
       console.error("Error details:", error);

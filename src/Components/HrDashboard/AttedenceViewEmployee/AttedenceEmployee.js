@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2"
+import axiosInstance from "./../../../axiosInstance.js";
+
 function AttedenceEmployee() {
   const [attendanceDetails, setAttendanceDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const apiUrl=process.env.REACT_APP_DB;
@@ -13,7 +15,7 @@ function AttedenceEmployee() {
   useEffect(() => {
     setisLoading(true);
 
-    axios
+    axiosInstance
       .get(`${apiUrl}users/attendance/${storedId}`,
         {
           headers: {

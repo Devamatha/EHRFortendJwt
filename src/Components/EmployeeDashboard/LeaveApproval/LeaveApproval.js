@@ -3,11 +3,12 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 import{getXsrfToken} from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 // import "./LeaveApproval.css"
 const LeaveApproval = () => {
-  // Retrieve the employee ID from localStorage
-  const empId = localStorage.getItem("empId");
+  // Retrieve the employee ID from sessionStorage
+  const empId = sessionStorage.getItem("empId");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   // State hooks for form fields
@@ -37,7 +38,7 @@ const LeaveApproval = () => {
 
     try {
       // Post request to backend API
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${apiUrl}leaveApproval/employee/${empId}`,
         leaveApprovalData,
         {

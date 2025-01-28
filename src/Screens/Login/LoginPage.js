@@ -38,10 +38,10 @@ function LoginPage() {
         const data = await response.json();
         // Handle successful login, e.g., store JWT token, redirect to another page, etc.
         // console.log("Login successful:", data);
-        localStorage.setItem("user_id", data.photographer_Id);
-        localStorage.setItem("admin_Id", data.admin_Id);
-        localStorage.setItem("fullName", data.fullName);
-        localStorage.setItem("empId", data.id);
+        sessionStorage.setItem("user_id", data.photographer_Id);
+        sessionStorage.setItem("admin_Id", data.admin_Id);
+        sessionStorage.setItem("fullName", data.fullName);
+        sessionStorage.setItem("empId", data.id);
         // console.log(data.role, "role");
         Swal.fire({
           icon: "success",

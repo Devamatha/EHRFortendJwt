@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from 'sweetalert2';
 import { getXsrfToken } from "../../App.js";
+import axiosInstance from "./../../axiosInstance.js";
 
 const EditJobDetails = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const EditJobDetails = () => {
   // Fetch job details if not available in location state
   useEffect(() => {
     if (!initialJobDetails) {
-      axios.get(`${apiUrl}JobDetails/${jobId}` ,{
+      axiosInstance.get(`${apiUrl}JobDetails/${jobId}` ,{
         headers: {
           "Authorization": sessionStorage.getItem('Authorization')
         },
@@ -69,10 +70,10 @@ const EditJobDetails = () => {
       overallPercentage: jobData.overallPercentage, // Ensure '%' symbol is removed
     };
 
-    axios
+    axiosInstance
       .put(`${apiUrl}JobDetails/update/${jobId}`, updatedJobDetails,{
         headers:{
-          user_Id: localStorage.getItem("user_id"),
+          user_Id: sessionStorage.getItem("user_id"),
           "Authorization": sessionStorage.getItem('Authorization'),
           //"x-xsrf-token":xsrfToken
         },

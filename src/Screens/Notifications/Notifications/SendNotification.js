@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./SendNotification.css";
+import axiosInstance from "./../../../axiosInstance.js";
+
 const SendNotification = () => {
   const [senderId, setSenderId] = useState("");
   const [selectedEmployees, setSelectedEmployees] = useState([]);
@@ -12,7 +14,7 @@ const SendNotification = () => {
   const [messageType, setMessageType] = useState("");
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-  const userId = localStorage.getItem("user_id");
+  const userId = sessionStorage.getItem("user_id");
 
   useEffect(() => {
     setSenderId(userId);
@@ -24,7 +26,7 @@ const SendNotification = () => {
 
   const getTheEmployees = async (userId) => {
     try {
-      const res = await axios.get(
+      const res = await axiosInstance.get(
         `${apiUrl}users/${userId}/employees`,{
           headers: {
             "Authorization": sessionStorage.getItem("Authorization"),
@@ -62,7 +64,7 @@ const SendNotification = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         `${apiUrl}notifications/send/${senderId}`,
         {
           receivers: selectedEmployees,

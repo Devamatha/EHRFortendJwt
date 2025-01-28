@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 import { useNavigate } from "react-router-dom";
 
@@ -13,7 +14,7 @@ function HolidayTableData() {
   const navigate = useNavigate();
 
   const [jobDetails, setJobDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
   const apiUrl = process.env.REACT_APP_DB;
@@ -28,10 +29,10 @@ function HolidayTableData() {
   const holiday = async (storedId) => {
     setisLoading(true);
     try {
-      const response = await axios.get(`${apiUrl}users/holiday/${storedId}`,
+      const response = await axiosInstance.get(`${apiUrl}users/holiday/${storedId}`,
       {
         headers: {
-          "Authorization": sessionStorage.getItem('Authorization'),
+          "Authorization": sessionStorage.getItem('Authorization')
 
         },
         observe: 'response',
@@ -40,13 +41,13 @@ function HolidayTableData() {
        }
 
       );
-      setJobDetails(response.data.reverse());
+      setJobDetails(response.data?.reverse());
 
-      setHasNoData(response.data.length === 0);
+      setHasNoData(response.data?.length === 0);
       setisLoading(false);
 
     } catch (error) {
-      console.error("There was an error fetching the job details!", error);
+      console.error("There was an error fetching the job details!", error.response?.data?.error);
       setisLoading(false);
 
     }
@@ -76,7 +77,7 @@ function HolidayTableData() {
       cancelButtonText: "No, cancel!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
+        axiosInstance
           .delete(`${apiUrl}holidays/delete/${jobId}`,{
             headers:{
               user_Id: storedId,
@@ -108,10 +109,10 @@ function HolidayTableData() {
   }
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = jobDetails.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = jobDetails?.slice(indexOfFirstItem, indexOfLastItem);
 
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(jobDetails.length / itemsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(jobDetails?.length / itemsPerPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -206,7 +207,7 @@ function HolidayTableData() {
           >
             <a className="page-link" href="#!" aria-label="Previous">
               <span aria-hidden="true">&laquo;</span>
-              <span class="sr-only">Previous</span>
+              <span className="sr-only">Previous</span>
             </a>
           </li>
           <li className="page-item mt-2"> {renderPageNumbers}</li>
@@ -218,7 +219,7 @@ function HolidayTableData() {
           >
             <a className="page-link" href="#!" aria-label="Next">
               <span aria-hidden="true">&raquo;</span>
-              <span class="sr-only">Next</span>
+              <span className="sr-only">Next</span>
             </a>
           </li>
         </ul>

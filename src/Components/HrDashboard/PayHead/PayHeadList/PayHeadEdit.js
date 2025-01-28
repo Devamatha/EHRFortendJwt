@@ -4,13 +4,14 @@ import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { getXsrfToken } from "../../../../App.js";
+import axiosInstance from "./../../../../axiosInstance.js";
 
 // import '../AddPayHead.css';
 const PayHeadEdit = () => {
   const [payHeadName, setpayHeadName] = useState("");
   const [payHeadDescription, setpayHeadDescription] = useState("");
   const [payHeadType, setpayHeadType] = useState("");
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
 
   const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_DB;
@@ -25,16 +26,13 @@ const PayHeadEdit = () => {
 
   const fetchPayHeadById = async () => {
     try {
-      const response = await axios.get(`${apiUrl}payHeads/${payId}`,{
+      const response = await axiosInstance.get(`${apiUrl}payHeads/${payId}`, {
         headers: {
-          Authorization: sessionStorage.getItem('Authorization'),
+          Authorization: sessionStorage.getItem("Authorization"),
           //"x-xsrf-token":xsrfToken
-
         },
-        withCredentials: true
-      }
-
-      );
+        withCredentials: true,
+      });
       const data = response.data;
 
       setpayHeadName(data.payHeadName);
@@ -54,44 +52,34 @@ const PayHeadEdit = () => {
       formData.append("payHeadDescription", payHeadDescription);
       formData.append("payHeadType", payHeadType);
 
-      const response = await fetch(`${apiUrl}payHeads/update/${payId}`, {
-        method: "PUT",
-        body: formData,
-        headers: {
-          "user_Id": storedId,
-          "Authorization": sessionStorage.getItem('Authorization'),
-          //"x-xsrf-token":xsrfToken
-        },
-        withCredentials: true
+      const response = await axiosInstance.put(
+        `${apiUrl}payHeads/update/${payId}`,
+
+        formData,
+        {
+          headers: {
+            user_Id: storedId,
+            Authorization: sessionStorage.getItem("Authorization"),
+            //"x-xsrf-token":xsrfToken
+          },
+          withCredentials: true,
+        }
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: " Pay Head updated  Successfullyl",
+        text: "The add Pay Head has been successfully updated!",
+      }).then((result) => {
+        navigate("/hrdashboard/PayHeadList");
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        Swal.fire({
-          icon: "error",
-          title: errorData.message,
-          text: errorData.error ,
-        });
-        setLoading(false);
-
-      } else {
-        const data = await response.json();
-       
-        Swal.fire({
-          icon: "success",
-          title: " Pay Head updated  Successfullyl",
-          text: "The add Pay Head has been successfully updated!",
-        });
-
-        navigate("/hrdashboard/PayHeadList");
-
-        setLoading(false);
-      }
+      setLoading(false);
     } catch (error) {
       Swal.fire({
         icon: "error",
-        title: error.error,
-        text: error.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
       });
       setLoading(false);
 

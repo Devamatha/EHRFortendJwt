@@ -1,61 +1,52 @@
 import React from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
+import { useNavigate } from "react-router-dom";
+
 function AddHoliday() {
   const [holidayTitle, setholidayTitle] = useState("");
   const [description, setdescription] = useState("");
   const [holidayDate, setholidayDate] = useState("");
   const [holidayType, setholidayType] = useState("");
-  const userid = localStorage.getItem("user_id");
+  const userid = sessionStorage.getItem("user_id");
   const [loading, setLoading] = useState(false);
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
+  const navigate = useNavigate();
 
-
-
-const xsrfToken = getXsrfToken();
   const handleaddJob = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch(`${apiUrl}holidays/user/${userid}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", 
-          "user_Id": userid,
-          "Authorization": sessionStorage.getItem('Authorization'),
-          //"x-xsrf-token":xsrfToken
+      const response = await axiosInstance.post(
+        `${apiUrl}holidays/user/${userid}`,
+        {
+          holidayTitle,
+          description,
+          holidayDate,
+          holidayType,
         },
-        observe: 'response',
-        credentials: 'include',
-           withCredentials: true,
-        body: JSON.stringify({
-          holidayTitle: holidayTitle,
-          description: description,
-          holidayDate: holidayDate,
-          holidayType: holidayType,
-        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+            user_Id: userid,
+            Authorization: sessionStorage.getItem("Authorization"),
+            //"x-xsrf-token":xsrfToken
+          },
+          observe: "response",
+          credentials: "include",
+          withCredentials: true,
+        }
+      );
+      Swal.fire({
+        icon: "success",
+        title: "Holiday Added Successfullyl",
+        text: "The Holiday has been successfully added!",
+      }).then(() => {
+        navigate("/hrdashboard/HolidayTableData");
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        // Handle successful login, e.g., store JWT token, redirect to another page, etc.
-        // console.log("Login successful:", data);
-        Swal.fire({
-          icon: "success",
-          title: "Holiday Added Successfullyl",
-          text: "The Holiday has been successfully added!",
-        });
-      } else {
-        const errorData = await response.json();
-        //  setErrorMessage(errorData.error || "Login failed. Please try again.");
-        Swal.fire({
-          icon: "error",
-          title: errorData.error,
-          text: errorData.message,
-        });
-      }
       setLoading(false);
       setholidayTitle("");
       setdescription("");
@@ -64,11 +55,10 @@ const xsrfToken = getXsrfToken();
     } catch (error) {
       setLoading(false);
       Swal.fire({
-        icon: "error",
         title: error.error,
-        text: error.message,
+        text: error.response?.data?.message,
+        icon: "error",
       });
-      // setErrorMessage("An error occurred. Please try again.");
       console.error("Job addition error:", error);
       setholidayTitle("");
       setdescription("");

@@ -3,12 +3,13 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 function AddPayHead() {
   const [payHeadName, setpayHeadName] = useState("");
   const [payHeadDescription, setpayHeadDescription] = useState("");
   const [payHeadType, setpayHeadType] = useState("");
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [loading, setLoading] = useState("");
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
@@ -19,7 +20,7 @@ function AddPayHead() {
     setLoading(true);
     
     try {
-      const response = await axios.post(`${apiUrl}payHeads/user/${storedId}`, 
+      const response = await axiosInstance.post(`${apiUrl}payHeads/user/${storedId}`, 
         {
           payHeadName: payHeadName,
           payHeadDescription: payHeadDescription,

@@ -14,6 +14,8 @@ import { getXsrfToken } from "../../../App.js";
 import { useNavigate } from "react-router-dom";
 import PayheadsModal from "./PayHeadsModal/PayheadsModal";
 import PaySlip from "./PaySlip/PaySlip";
+import axiosInstance from "./../../../axiosInstance.js";
+
 // import "./EmployeeList.css";
 function EmployeeList() {
   const [selectedEmpId, setSelectedEmpId] = useState(null);
@@ -27,7 +29,7 @@ function EmployeeList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [jobDetails, setJobDetails] = useState([]);
-  const storedId = localStorage.getItem("user_id");
+  const storedId = sessionStorage.getItem("user_id");
   const [isPaySlipOpen, setIsPaySlip] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
@@ -41,7 +43,7 @@ function EmployeeList() {
   const employeeList=async (storedId)=>{
     setisLoading(true);
 
-    axios
+    axiosInstance
     .get(`${apiUrl}users/employeedetails/${storedId}`,
       {
         headers: {
@@ -89,7 +91,7 @@ function EmployeeList() {
     }).then((result) => {
       if (result.isConfirmed) {
         // Proceed with the deletion if confirmed
-        axios
+        axiosInstance
           .delete(`${apiUrl}employees/delete/${jobId}`,{
             headers:{
               user_Id: storedId,

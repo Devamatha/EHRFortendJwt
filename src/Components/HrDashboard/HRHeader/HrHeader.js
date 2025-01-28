@@ -4,8 +4,8 @@ import "../../../adminDashboard/AdminDashboardHeader/AdminHeader.css";
 import { Link } from "react-router-dom";
 
 function HrHeader() {
-  const UserName = localStorage.getItem("fullName");
-  const empId = localStorage.getItem("empId");
+  const UserName = sessionStorage.getItem("fullName");
+  const empId = sessionStorage.getItem("empId");
 
   return (
     <div

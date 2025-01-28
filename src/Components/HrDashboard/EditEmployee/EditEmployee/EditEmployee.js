@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { getXsrfToken } from "../../../../App.js";
+import axiosInstance from '../../../../axiosInstance.js'
 
 const EditEmployee = () => {
   const { id } = useParams();
@@ -10,7 +11,7 @@ const EditEmployee = () => {
   const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const [loading, setLoading] = useState(false);
-  const user_Id=localStorage.getItem("user_Id");
+  const user_Id=sessionStorage.getItem("user_Id");
   const xsrfToken = getXsrfToken();
 
   const [employee, setEmployee] = useState({
@@ -44,7 +45,7 @@ const EditEmployee = () => {
   });
 
   useEffect(() => {
-    axios
+    axiosInstance
       .get(`${apiUrl}employees/${id}`,{
         headers: { 
           "Authorization": sessionStorage.getItem('Authorization')
@@ -76,11 +77,11 @@ const EditEmployee = () => {
       }
     });
 
-    axios
+    axiosInstance
       .put(`${apiUrl}employees/update/${id}`, formData, {
         headers:{
           "Content-Type": "multipart/form-data",
-          "user_Id": localStorage.getItem("user_id"),
+          "user_Id": sessionStorage.getItem("user_id"),
          "Authorization": sessionStorage.getItem('Authorization'),
           //"x-xsrf-token":xsrfToken
         },
@@ -96,7 +97,7 @@ const EditEmployee = () => {
           text: "Employee updated successfully.",
           confirmButtonText: "OK",
         }).then(() => {
-          navigate(`/hrdashboard/EmployeeList`); // Redirect after successful update
+          navigate(`/hrdashboard/EmployeeList`); 
         });
         setLoading(false);
       })
@@ -105,7 +106,6 @@ const EditEmployee = () => {
           title: error.response?.data?.error,
           text: error.response?.data?.message,
           icon: "error",
-          confirmButtonText: "OK",
         });
         setLoading(false);
 

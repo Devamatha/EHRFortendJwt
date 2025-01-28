@@ -5,12 +5,13 @@ import jsPDF from "jspdf";
 import domtoimage from "dom-to-image";
 import html2canvas from "html2canvas";
 import autoTable from "jspdf-autotable";
+import axiosInstance from "./../../../../axiosInstance.js";
 
 const EmployeeDetails = () => {
   const { empid } = useParams();
   const location = useLocation();
 
-  const user_id = localStorage.getItem("user_id");
+  const user_id = sessionStorage.getItem("user_id");
   const { month } = location.state || {};
 
   const [employeedata, setEmployeeData] = useState({});
@@ -22,7 +23,7 @@ const EmployeeDetails = () => {
   const apiUrl=process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
   const employeeGet = () => {
-    axios 
+    axiosInstance 
       .get(`${apiUrl}employees/${empid}`,
         {
           headers: {
@@ -48,7 +49,7 @@ const EmployeeDetails = () => {
   };
 
   const getHrDetails = (id) => {
-    axios
+    axiosInstance
       .get(`${apiUrl}employees/addPayHeaddetails/${id}`,
         {
           headers: {

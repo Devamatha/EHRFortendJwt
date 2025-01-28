@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axiosInstance from "./../../../axiosInstance.js";
+
 // import './ViewNotification.css'
 const ViewNotification = () => {
   const [notifications, setNotifications] = useState([]);
@@ -9,7 +11,7 @@ const ViewNotification = () => {
 
   const getEmployee = async () => {
     try {
-      const response = await fetch(
+      const response = await axiosInstance(
         `${apiUrl}notifications/employee/${empid}`,{
           headers: {
             "Authorization": sessionStorage.getItem("Authorization"),

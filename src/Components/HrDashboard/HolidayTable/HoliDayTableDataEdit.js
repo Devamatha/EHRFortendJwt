@@ -1,25 +1,24 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import { getXsrfToken } from "../../../App.js";
+import axiosInstance from "./../../../axiosInstance.js";
 
 const HoliDayTableDataEdit = () => {
-
   const [holidayTitle, setholidayTitle] = useState("");
   const [description, setdescription] = useState("");
   const [holidayDate, setholidayDate] = useState("");
   const [holidayType, setholidayType] = useState("");
-  const storedId = localStorage.getItem("user_id");
-  const apiUrl=process.env.REACT_APP_DB;
+  const storedId = sessionStorage.getItem("user_id");
+  const apiUrl = process.env.REACT_APP_DB;
   const environment = process.env.REACT_APP_NODE_ENV;
-
 
   const xsrfToken = getXsrfToken();
 
   const navigate = useNavigate();
-const [loading,setLoading]=useState("");
+  const [loading, setLoading] = useState("");
   //Get Id
   const { jobId } = useParams();
 
@@ -30,29 +29,24 @@ const [loading,setLoading]=useState("");
   const holiDayTableDataById = async () => {
     // console.log(jobId);
     try {
-      const response = await axios.get(`${apiUrl}holidays/${jobId}`,
-      {
+      const response = await axiosInstance.get(`${apiUrl}holidays/${jobId}`, {
         headers: {
-          "Authorization": sessionStorage.getItem('Authorization')
-         
+          Authorization: sessionStorage.getItem("Authorization"),
         },
-        observe: 'response',
-        credentials: 'include',
-           withCredentials: true,
-       }
-
-      );
+        observe: "response",
+        credentials: "include",
+        withCredentials: true,
+      });
       const data = response.data;
 
       setholidayTitle(data.holidayTitle);
       setdescription(data.description);
       setholidayDate(data.holidayDate);
       setholidayType(data.holidayType);
-    }
-    catch (error) {
+    } catch (error) {
       // console.log('Error Fetching Data', error);
     }
-  }
+  };
 
   //Edit
 
@@ -67,58 +61,44 @@ const [loading,setLoading]=useState("");
     formData.append("holidayType", holidayType);
 
     try {
-      const response = await fetch(
+      const response = await axiosInstance.put(
         `${apiUrl}holidays/update/${jobId}`,
+        formData,
         {
-          method: "PUT",
-          body: formData, 
-          headers:{
+          headers: {
             user_Id: storedId,
-            "Authorization": sessionStorage.getItem("Authorization"),
-          // "x-xsrf-token": xsrfToken,
+            Authorization: sessionStorage.getItem("Authorization"),
+            // "x-xsrf-token": xsrfToken,
           },
-          observe: 'response',
-          credentials: 'include',
-             withCredentials: true,
-
+          observe: "response",
+          credentials: "include",
+          withCredentials: true,
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        Swal.fire({
-          icon: "error",
-          title: errorData.error,
-          text: errorData.message ,
-        });
-      } else {
-        const data = await response.json();
-        // console.log("Holiday update successful:", data);
-        Swal.fire({
-          icon: "success",
-          title: "Holiday updated Successfully",
-          text: "The Holiday has been successfully updated!",
-        });
+      Swal.fire({
+        icon: "success",
+        title: "Holiday updated Successfully",
+        text: "The Holiday has been successfully updated!",
+      }).then(() => {
+        navigate("/hrdashboard/HolidayTableData");
 
-        navigate('/hrdashboard/HolidayTableData');
+      });
 
-       
-      }
+
       setLoading(false);
-
     } catch (error) {
       setLoading(false);
       Swal.fire({
         icon: "error",
-        title: error.error,
-        text: error.message,
+        title: error.response?.data?.error,
+        text: error.response?.data?.message,
       });
       console.error("Holiday update error:", error);
     }
-};
+  };
 
-
-// ml-[31%] w-[69%] md:ml-[31%] md:w-[69%] lg:ml-[10%] lg:w-[90%] 
+  // ml-[31%] w-[69%] md:ml-[31%] md:w-[69%] lg:ml-[10%] lg:w-[90%]
   return (
     <div className=" newtabledata">
       <div className="container-fluid totalPage">
@@ -209,23 +189,29 @@ const [loading,setLoading]=useState("");
 
           <div className="form-group row mt-4">
             <div className="col-sm-12 text-center">
-              <button type="submit" className="btn button w-100" disabled={loading}>
-                {loading?(
-              <span>
-              <i className="spinner-border spinner-border-sm" role="status"></i>
-                updating...
-              </span>
-                ):(
+              <button
+                type="submit"
+                className="btn button w-100"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span>
+                    <i
+                      className="spinner-border spinner-border-sm"
+                      role="status"
+                    ></i>
+                    updating...
+                  </span>
+                ) : (
                   "Update Details"
                 )}
-                
               </button>
             </div>
           </div>
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HoliDayTableDataEdit
+export default HoliDayTableDataEdit;
