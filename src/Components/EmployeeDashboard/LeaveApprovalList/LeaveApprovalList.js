@@ -25,7 +25,7 @@ const LeaveApprovalList = () => {
     setisLoading(true);
 
     try {
-      const response = await axiosInstance.get(` ${apiUrl}employees/leave/${empId}`, {
+      const response = await  axiosInstance.get(`${apiUrl}employees/leave/${empId}`, {
         headers: {
           Authorization: sessionStorage.getItem("Authorization"),
         // "x-xsrf-token": xsrfToken,

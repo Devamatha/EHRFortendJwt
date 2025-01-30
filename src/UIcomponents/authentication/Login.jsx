@@ -50,7 +50,10 @@ function Login() {
     }
 
     setErrors(formErrors);
-
+    if (formErrors.username || formErrors.password) {
+      setLoading(false);
+      return;
+    }
     if (!formErrors.username && !formErrors.password) {
       // console.log("Logging in with:", { username, password });
       try {
@@ -160,6 +163,7 @@ function Login() {
                 <div className="relative">
                   <input
                     type="text"
+                    required
                     className="w-full px-4 py-2 rounded-lg bg-white outline-none"
                     value={username}
                     onChange={(e) => setUername(e.target.value)}
@@ -188,6 +192,7 @@ function Login() {
                     type={passwordVisible ? "text" : "password"}
                     className="w-full px-4 py-2 rounded-lg bg-white outline-none"
                     value={password}
+                    required
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={handlePasswordFocus}
                   />
